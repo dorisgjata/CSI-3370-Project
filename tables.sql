@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS storedPreferences CASCADE;
 DROP TABLE IF EXISTS meal CASCADE;
 DROP TABLE IF EXISTS favourites CASCADE;
-
 --Hillcrest or Vanderberg ---
 CREATE TABLE campusLocations(
     locationId INT PRIMARY KEY,
@@ -16,7 +15,6 @@ CREATE TABLE campusLocations(
     startHours TIME,
     endHours TIME
     );
-
 CREATE TABLE filters(
     filterId INT PRIMARY KEY,
     filterName TEXT
