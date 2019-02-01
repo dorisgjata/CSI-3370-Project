@@ -1,7 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dining</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
    <body>
-    <h1>Welcome to {{ location }}!</h1>
-
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                  <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                  </a>
+                </div>
+              
+                <div id="navbarBasicExample" class="navbar-menu">
+                  <div class="navbar-start">
+                    <a class="navbar-item">
+                      Home
+                    </a>              
+                     
+                 </div>
+              
+                  <div class="navbar-end">
+                    <div class="navbar-item">
+                      <div class="buttons">
+                        <a class="button is-primary">
+                          <strong>Sign up</strong>
+                        </a>
+                        <a class="button is-light">
+                          Log in
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+              <div> Where do you want to eat?</div>
+              {% for location in locations %}
+              <h1> {{ location }}</h1>
+            {% endfor %}
    </body>
 </html>
