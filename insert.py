@@ -2,11 +2,11 @@ import psycopg2
 
 def insert(param):
     conn = None
-    sql = "INSERT INTO campusLocations(locationest'),(2,'Vanderberg')])Id, locationName) VALUES (%s, %s)"
+    sql = "INSERT INTO campusLocations(locationId, locationName) VALUES (%s, %s)"
 
     try:
         print('Connecting to the PostgreSQL database')
-        conn = psycopg2.connectest'),(2,'Vanderberg')])(host="localhost", database="dinning", user="postgres", password="postgres")
+        conn = psycopg2.connect(host="localhost", database="dinning", user="postgres", password="postgres")
         cur=conn.cursor()
 
         cur.executemany(sql,param)
@@ -21,4 +21,4 @@ def insert(param):
             print('Database connection closed.')
 
 if __name__ == '__main__':
-    insert([(1,'Hillcrest'),(2,'Vanderberg')])
+  #  insert([(1,'Hillcrest'),(2,'Vanderberg')])
