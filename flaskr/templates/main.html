@@ -6,6 +6,7 @@
     <title>Dining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css">
   </head>
    <body>
         <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -21,10 +22,8 @@
                   <div class="navbar-start">
                     <a class="navbar-item">
                       Home
-                    </a>              
-                     
-                 </div>
-              
+                    </a>            
+                 </div>              
                   <div class="navbar-end">
                     <div class="navbar-item">
                       <div class="buttons">
@@ -39,9 +38,69 @@
                   </div>
                 </div>
               </nav>
-              <div> Where do you want to eat?</div>
-              {% for location in locations %}
-              <h1> {{ location }}</h1>
-            {% endfor %}
+              <section class="hero is-medium is-primary is-bold">
+                <div class="hero-body">
+                  <div class="container">
+                    <h1 class="title">
+                      Dining App
+                    </h1>
+                    <h2 class="subtitle">
+                      Are you hungry?
+                    </h2>
+                  </div>
+                </div>
+              </section>
+              <div class="container">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Location</th>
+                    </tr>
+                    <tbody>
+                        {% for location in locations %}
+                        <tr> <td>{{ location }}</td></tr>
+                      {% endfor %}
+                    </tbody>
+                  </thead>
+                </div>
+          <!--   <div id="app">
+              <template>
+                <b-table :data="data" :columns="columns"></b-table>
+            </template>   
+           </div> -->
+      
+          <script src="https://unpkg.com/vue"></script>
+          <!-- Full bundle -->
+          <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
+      
+          <!-- Individual components -->
+          <script src="https://unpkg.com/buefy/dist/components/table"></script>
+          <script src="https://unpkg.com/buefy/dist/components/input"></script>
+      <script>
+         const example = {
+          data() {
+              return {
+                  data: /* [
+                      { 'location': 'Hill Crest', 'hours': '8AM-11PM'},
+                          ] */'',
+                  columns: [
+                      {
+                          field: 'location',
+                          label: 'Location',
+                      },
+                      {
+                          field: 'hours',
+                          label: 'Hours',
+                      }                
+                  ]
+              }
+          }
+      }
+
+            const app = new Vue(example)
+
+            app.$mount('#app')
+        
+      </script>
    </body>
 </html>

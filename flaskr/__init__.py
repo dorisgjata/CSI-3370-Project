@@ -5,11 +5,11 @@ from . import db
 app = Flask(__name__)
 db.init_app(app)
 
-@app.route('/')
-def index():
-    return 'Hello World'
-
 @app.route('/locations')
+def index():
+    return render_template('main.html', locations=loc)
+
+@app.route('/')
 def locations():
     conn = db.get_db()
     sql = 'SELECT locationname FROM campuslocations'
