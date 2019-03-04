@@ -19,7 +19,7 @@ def getLocationSchedules():
     print(data.status_code)
     file = open("event"+timestamp+".txt", "x")
     return json.dump(response, file )
-getLocationSchedules()
+#getLocationSchedules()
 def getLocationMenu():
     timestamp=str(datetime.datetime.today())
     print(timestamp)
@@ -56,7 +56,8 @@ def getLocationMenu():
                     f["name"]=filter["name"]
                 for nutrient in nutrients:
                     n["name"]=nutrient["name"]
-                    n["value"]=nutrient["value"])    
+                    n["value"]=nutrient["value"]    
     file = open("menu"+timestamp+".txt", "x")
-    json.dump(response, file ) 
-getLocationMenu()
+    return response
+    #json.dump(response, file ) 
+#getLocationMenu()
