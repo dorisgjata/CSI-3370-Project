@@ -67,28 +67,5 @@ def filters():
     else:
         response_object['filters']=FILTERS
     return jsonify(response_object)
-
-@app.route('/filters/<filterId>', methods=['PUT','DELETE'])
-def single_filter(filterId):
-    response_object={'status': 'success'}
-    if request.method=='PUT':
-        post_data=request.get_json()
-        remove_filter(filterId)
-        #TODO: add the db stuff below
-        FILTERS.append({
-            'filterId': post_data.get('filterId'),
-            'filterName': post_data.get('filterName')
-        })
-        response_object['message']='Updated'
-   
-    return jsonify(response_object)
-
-def remove_filter(filterId):
-    for item in FILTERS:
-        if item['filterId']== filterId:
-            FILTERS.remove(item)
-            return True
-    return False
-
 if __name__ == '__main__':
     app.run(debug=True)
