@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify,json
+from flask import Flask, render_template, jsonify,json, request
 import os
 from flask_cors import CORS
 import psycopg2
@@ -27,7 +27,7 @@ def locations():
     cur.close()
     return jsonify(array)
     
-@app.route('/filters')
+''' @app.route('/filters')
 def filters():
     conn = db.get_db()
     sql = 'SELECT filterName FROM filters'
@@ -38,7 +38,7 @@ def filters():
     for filter in filters:
         array.append(filter[0])
     cur.close()
-    return jsonify(array)
+    return jsonify(array) '''
 
 @app.route('/menu')
 def menu():
@@ -48,6 +48,24 @@ def menu():
     data=requests.get(url) 
     response=data.json()    
     return jsonify(response)
-
+FILTERS=[
+    {
+        'filterId': 1,
+        'filterName': 'Vegan'
+    }
+]
+@app.route('/filters', methods=['GET','POST'])
+def filters():
+    response_object={'status': 'success'}
+    if request.method=='POST':
+        post_data=request.get_json()
+        FILTERS.append({
+            'filterId': post_data.get('filterId'),
+            'filterName': post_data.get('filterName')
+        })
+        response_object['message']='Added'
+    else:
+        response_object['filters']=FILTERS
+    return jsonify(response_object)
 if __name__ == '__main__':
     app.run(debug=True)
