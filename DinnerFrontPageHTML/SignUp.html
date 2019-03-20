@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+<style>
+<!-- CSS below-->
+body {
+font-family: 'Abel', sans-serif;
+}
+
+    /*input fields */
+input[type=text], input[type=password] {
+  width: 99%;
+  padding: 10px;
+  margin: 5px 0 20px 0;
+  display: inline-block;
+  border: none;
+  background: #e6e6e6;
+  font-family: 'Abel', sans-serif;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+  margin: auto;
+font-family: 'Abel', sans-serif;
+}
+
+
+/* button edits */
+button {
+font-family: 'Abel', sans-serif;
+  background-color:  #1d8348 ;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+<!-- hover color-->
+button:hover {
+  opacity:1;
+}
+
+
+
+.cancelbtn {
+font-family: 'Abel', sans-serif;
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+.signupbtn, .cancelbtn  {
+  float: left;
+  width: 50%;
+}
+
+
+
+.SignUpForm {
+font-family: 'Abel', sans-serif;
+background-color: #f2f2f2;
+border-style: solid;
+  padding: 15px;
+
+}
+
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+@media screen and (max-width: 290px) {
+   .signupbtn, .cancelbtn {
+     width: 100%;
+  }
+   }
+    </style>
+    </head>
+    <!-- CSS above -->
+    <body background="background.jpg">
+
+
+
+
+
+<div class="SignUpForm">
+    <h1>Sign Up</h1>
+    <p>Please fill this form to create an account.</p>
+    <hr>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+    <label for="psw-repeat"><b>Password Again</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+    <label>
+      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+    </label>
+
+
+    <div class="clearfix">
+    <button type="submit" class="signupbtn">Sign Up</button>
+
+      <button type="button" onclick="DinnerFrontPage.html" class="cancelbtn">Cancel</button>
+
+    </div>
+  </div>
+
+
+
+    </body>
+</html>
