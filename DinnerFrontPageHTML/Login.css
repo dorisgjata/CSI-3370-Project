@@ -66,6 +66,15 @@ img {
   background: var(--dark);
   color: var(--light);
 }
+
+.SearchBar input[type=text]{
+  text-align: left;
+  font-size:1.2rem;
+  background:#FFFFFF;
+  display: block;
+  padding:0.8rem;
+  width:290%;
+}
 body {
 margin: 0px;
   font-family: 'Abel', sans-serif;
