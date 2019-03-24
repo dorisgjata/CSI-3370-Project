@@ -37,7 +37,9 @@ def locations():
     array=[]
     for location in locations:
         array.append(location[0])
+    conn.commit()
     cur.close()
+    conn.close()
     return jsonify(array)
 
 @app.route('/parsedmenu')
@@ -62,7 +64,9 @@ def filters():
         filters=cur.fetchall()
         for (key, val) in filters:
             FILT.append({'filterId':key, 'filterName': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'filters': FILT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -77,7 +81,9 @@ def filters():
         cur=conn.cursor()
         val=(filterID,filterNAME)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
@@ -95,7 +101,9 @@ def items():
         items=cur.fetchall()
         for (key, val) in items:
             print(key, val)
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'items': ITEM})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -110,7 +118,9 @@ def items():
         cur=conn.cursor()
         val=(itemId, itemName, itemPortion, itemIngredients, itemNutrients , itemFilters)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
 
 @app.route('/menu', methods=['GET','POST'])
@@ -127,7 +137,9 @@ def menu():
         menus=cur.fetchall()
         for (key, val) in menus:
             print(key, val)
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'menu': MENU})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -144,7 +156,9 @@ def menu():
         cur=conn.cursor()
         val=(menuId, menuName, fromDate, menuIngredients, toDate , locationId)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
 
 @app.route('/categories', methods=['GET','POST'])
@@ -161,7 +175,9 @@ def categories():
         for (key, val) in categorys:
             print(key,val)
             #CAT.append({'categoryId':key, 'categoryName': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'categories': CAT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -177,7 +193,9 @@ def categories():
         cur=conn.cursor()
         val=(categoryId, categoryName, categoryItem)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
@@ -196,7 +214,9 @@ def periods():
         for (key, val) in periods:
             print(key,val)
             #CAT.append({'periodId':key, 'periodName': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'periods': CAT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -211,7 +231,9 @@ def periods():
         cur=conn.cursor()
         val=(periodId, periodName, periodCategory)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
@@ -230,7 +252,9 @@ def storedPreferences():
         for (key, val) in storedPreferences:
             print(key,val)
             #CAT.append({'preferenceId':key, 'preferenceCalories': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'storedPreferences': CAT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -245,43 +269,65 @@ def storedPreferences():
         cur=conn.cursor()
         val=(preferenceId, preferenceCalories, preferenceNutrients)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
 
+@app.route('/getusers', methods=['GET'])
+@cross_origin(origin='*')  
+def get_users():
+    response_object={}    
+    conn = db.get_db()
+    sql = 'SELECT userIdToken, userName , userLastName ,userEmail, isAdmin FROM users'
+    cur=conn.cursor()
+    cur.execute(sql)
+    users=cur.fetchall()
+    conn.commit()
+    cur.close()
+    conn.close()
+    response_object.update({'users': users})
+    return jsonify(response_object)
+    
 @app.route('/users', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def users():
-    response_object={'status': 'success'}    
+    response_object={}
     CAT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT userId, userName, userPassword FROM users JOIN categories ON categories.categoryid = users.periodcategory'
+        sql = 'SELECT userIdToken, userName , userLastName ,userEmail, isAdmin FROM users'
         cur=conn.cursor()
         cur.execute(sql)
         users=cur.fetchall()
-        for (key, val) in users:
-            print(key,val)
-            #CAT.append({'userId':key, 'userName': val})
+        response_object.update({'users': users})
+        conn.commit()
         cur.close()
-        response_object.update({'users': CAT})
+        conn.close()
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
-        userId= post_data.get('userId'),
-        userName=post_data.get('userName')
-        userPassword=post_data.get('userPassword')
+        userIdToken= post_data.get('tokenId'),
+        userName=post_data.get('firstName')
+        userLastName=post_data.get('lastName')
+        userEmail=post_data.get('email')
+        if userEmail == 'dorisgjata@gmail.com':
+            isAdmin= True
+        else:
+            isAdmin=False
         #FILT.append({'userId':periodID, 'userName': periodNAME})
-        response_object.update({'users': FILT}) 
+        response_object.update({'users': post_data}) 
         conn = db.get_db()
-        sql = "INSERT INTO users(userId, userName,userPassword) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO users(userIdToken, userName , userLastName ,userEmail, isAdmin) VALUES (%s, %s, %s, %s, %s)"
         cur=conn.cursor()
-        val=(userId, userName, userPassword)
+        val=(userIdToken, userName, userLastName ,userEmail, isAdmin)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
-    else: 
-        print("IDK")    
+        conn.close()
+        print("done")
     return jsonify(response_object)
 
 @app.route('/meal', methods=['GET','POST'])
@@ -298,7 +344,9 @@ def meal():
         for (key, val) in meal:
             print(key,val)
             #CAT.append({'mealId':key, 'mealCalories': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'meal': CAT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -315,14 +363,16 @@ def meal():
         cur=conn.cursor()
         val=(mealId, mealCalories, mealNutrients)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
 
 @app.route('/favourites', methods=['GET','POST'])
 @cross_origin(origin='*')  
-def meal():
+def favourites():
     response_object={'status': 'success'}    
     CAT=[]
     if request.method=='GET':
@@ -334,7 +384,9 @@ def meal():
         for (key, val) in meal:
             print(key,val)
             #CAT.append({'mealId':key, 'mealCalories': val})
+        conn.commit()
         cur.close()
+        conn.close()
         response_object.update({'meal': CAT})
     elif request.method=='POST':
         post_data=request.get_json()
@@ -351,7 +403,9 @@ def meal():
         cur=conn.cursor()
         val=(mealId, mealCalories, mealNutrients)
         cur.execute(sql, val)
+        conn.commit()
         cur.close()
+        conn.close()
     else: 
         print("IDK")    
     return jsonify(response_object)
@@ -366,7 +420,9 @@ def single_filter(filterId):
         sql = 'DELETE FROM filters WHERE filterId = (%s)'
         cur=conn.cursor()
         cur.executemany(sql,[(filterId)])
+        conn.commit()
         cur.close()
+        conn.close()
         response_object['message']="DELETED"
     elif request.method=='PUT':
         post_data=request.get_json()
@@ -376,7 +432,9 @@ def single_filter(filterId):
         sql = 'UPDATE filters SET filters.filterName = (%s) WHERE filters.id = (%s) '
         cur=conn.cursor()
         cur.executemany(sql,[(filterNAME,filterID)])
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
 
 @app.route('/items/<itemId>', methods=['PUT','DELETE'])
@@ -389,7 +447,9 @@ def single_item(itemId):
         sql = 'DELETE FROM items WHERE itemId = (%s)'
         cur=conn.cursor()
         cur.executemany(sql,[(itemId)])
+        conn.commit()
         cur.close()
+        conn.close()
     elif request.method=='PUT':
         post_data=request.get_json()
         post_data=request.get_json()
@@ -404,7 +464,9 @@ def single_item(itemId):
         sql = 'UPDATE items SET items.itemName = (%s) WHERE item.itemId = (%s) '
         cur=conn.cursor()
         cur.executemany(sql,[(filterNAME,itemId)])
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
 
 @app.route('/menu/<menuId>', methods=['PUT','DELETE'])
@@ -417,7 +479,9 @@ def single_menu(menuId):
         sql = 'DELETE FROM menu WHERE menuId = (%s)'
         cur=conn.cursor()
         cur.executemany(sql,[(menuId)])
+        conn.commit()
         cur.close()
+        conn.close()
     elif request.method=='PUT':
         post_data=request.get_json()
         menuId= post_data.get('menuId')
@@ -434,7 +498,9 @@ def single_menu(menuId):
         sql = 'UPDATE menu SET menus.menuName = (%s) WHERE menu.menuId = (%s) '
         cur=conn.cursor()
         cur.executemany(sql,[(filterNAME,menuId)])
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
 
 @app.route('/categorys/<categoryId>', methods=['GET','PUT','DELETE'])
@@ -447,7 +513,9 @@ def single_category(categoryId):
         sql = 'DELETE FROM categorys WHERE categoryId = (%s)'
         cur=conn.cursor()
         cur.executemany(sql,[(categoryId)])
+        conn.commit()
         cur.close()
+        conn.close()
         response_object['message']="DELETED"
     elif request.method=='PUT':
         post_data=request.get_json()
@@ -458,7 +526,9 @@ def single_category(categoryId):
         sql = 'UPDATE categories SET categories.categoryName = (%s) WHERE categories.id = (%s) '
         cur=conn.cursor()
         cur.executemany(sql,[(categoryName, categoryId)])
+        conn.commit()
         cur.close()
+        conn.close()
     return jsonify(response_object)
     
 if __name__ == '__main__':

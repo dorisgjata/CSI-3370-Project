@@ -14,6 +14,7 @@ Vue.use(GAuth, gauthOption)
 Vue.use(Buefy)
 Vue.config.productionTip = false;
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
