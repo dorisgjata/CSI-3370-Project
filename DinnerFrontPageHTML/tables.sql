@@ -56,10 +56,14 @@ CREATE TABLE periods(
    );
 --user account--
 CREATE TABLE users(
-    userId INT PRIMARY KEY,
+    userIdToken VARCHAR PRIMARY KEY,
     userName TEXT,
-    userPassword TEXT,
-    userPreferences TEXT,
+    userLastName TEXT,
+    userEmail TEXT,
+    userPreferences INT REFERENCES storedPreferences(preferenceId)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    userFavorites INT REFERENCES favourites(favouriteId)
+    ON UPDATE CASCADE ON DELETE CASCADE,
     isAdmin BOOLEAN
 );
 --users preferences--

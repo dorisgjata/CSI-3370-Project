@@ -16,7 +16,7 @@
               <td>{{ filter.filterName }}</td>
                <td>
                 <button type="button" value="edit" class="button" @click="editFilter(filter),isUpdateModalActive = true">Update</button>
-                <button type="button" class="button">Delete</button>
+                <button type="button" class="button"  @click="deleteFilter(filter.filterId)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -139,7 +139,33 @@ export default {
     },
     addFilter(payload) {
       const path = 'http://localhost:5000/filters';
-      axios.post(path, payload)
+      axios({
+        method: 'post',
+        url: 'http://localhost:5000/filters',
+        data: {
+          "filterId": payload.filterId,
+          "filterName": payload.filterName,
+        }
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+/*       axios.post(path, payload)
+        .then(() => {
+          this.getFilters();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.getFilters();
+        }); */
+    },
+    deleteFilter(id) {
+      const path = `http://localhost:5000/filters/${id}`;
+      axios.delete(path)
         .then(() => {
           this.getFilters();
         })
