@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Locations from '@/components/Locations';
 import Menu from '@/components/Menu';
 import Filters from '@/components/Filters';
-import SignIn from '@/components/SignIn';
+import Account from '@/components/Account';
 
 Vue.use(Router);
 
@@ -15,9 +15,9 @@ export default new Router({
       component: Locations,
     },
       {
-        path: '/signIn',
-        name: 'SignIn',
-        component: SignIn,
+        path: '/account/:email',
+        name: 'account',
+        component: Account,
       },
     {
       path: '/filters',

@@ -276,19 +276,24 @@ def storedPreferences():
         print("IDK")    
     return jsonify(response_object)
 
-@app.route('/getusers', methods=['GET'])
+@app.route('/user/<userEmail>', methods=['GET'])
 @cross_origin(origin='*')  
-def get_users():
+def get_users(userEmail):
     response_object={}    
     conn = db.get_db()
-    sql = 'SELECT userIdToken, userName , userLastName ,userEmail, isAdmin FROM users'
+    sql = 'SELECT userName, userPreferences, userFavorites FROM users WHERE userEmail= users.userEmail'
     cur=conn.cursor()
     cur.execute(sql)
-    users=cur.fetchall()
+    users=cur.fetchone()
     conn.commit()
     cur.close()
     conn.close()
-    response_object.update({'users': users})
+    user={
+        "userName":users[0],
+        "userPreferences":users[1],
+        "userFavorites":users[2],
+    }
+    response_object.update(user)
     return jsonify(response_object)
     
 @app.route('/users', methods=['GET','POST'])
@@ -309,20 +314,22 @@ def users():
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
-        userIdToken= post_data.get('tokenId'),
-        userName=post_data.get('firstName')
-        userLastName=post_data.get('lastName')
-        userEmail=post_data.get('email')
-        if userEmail == 'dorisgjata@gmail.com':
+        tokenId= post_data.get('tokenId')
+        firstName=post_data.get('firstName')
+        lastName=post_data.get('lastName')
+        email=post_data.get('email')
+        if email == 'dorisgjata@gmail.com':
             isAdmin= True
         else:
             isAdmin=False
         #FILT.append({'userId':periodID, 'userName': periodNAME})
         response_object.update({'users': post_data}) 
         conn = db.get_db()
+        
         sql = "INSERT INTO users(userIdToken, userName , userLastName ,userEmail, isAdmin) VALUES (%s, %s, %s, %s, %s)"
+        
         cur=conn.cursor()
-        val=(userIdToken, userName, userLastName ,userEmail, isAdmin)
+        val=(tokenId, firstName,lastName, email)
         cur.execute(sql, val)
         conn.commit()
         cur.close()

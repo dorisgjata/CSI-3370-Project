@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import SignIn from './components/SignIn'
+
 import router from './router'
 import Buefy from "buefy"
 import GAuth from 'vue-google-oauth2'
@@ -21,4 +23,10 @@ new Vue({
   router,
   components: { App },
   template: '<App/>',
+});
+new Vue({
+  el: '#signin',
+  router,
+  components: { SignIn },
+  template: '<SignIn/>',
 });
