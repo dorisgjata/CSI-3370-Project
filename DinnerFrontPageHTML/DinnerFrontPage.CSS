@@ -7,12 +7,14 @@
 }
 
 html {
+
   box-sizing: border-box;
     font-family: 'Gloria Hallelujah', cursive;
   color: var(--dark);
 }
 
 body {
+
   background: #ccc;
 margin:30px 30px;
   line-height: 1.0;
@@ -74,7 +76,7 @@ img {
   background:#FFFFFF;
   display: block;
   padding:0.8rem;
-  width:290%;
+  width:240%;
 }
 
 
