@@ -4,6 +4,10 @@ import Locations from '@/components/Locations';
 import Menu from '@/components/Menu';
 import Filters from '@/components/Filters';
 import Account from '@/components/Account';
+import Steps from '@/components/Steps';
+import Items from '@/components/Items';
+
+
 
 Vue.use(Router);
 
@@ -28,6 +32,16 @@ export default new Router({
       path: '/menu',
       name: 'Menu',
       component: Menu,
+    },
+    {
+      path: '/steps',
+      name: 'steps',
+      component: Steps,
+    },
+    {
+      path: '/items',
+      name: 'items',
+      component: Items,
     },
   ],
   mode: 'history',

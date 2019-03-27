@@ -26,10 +26,10 @@
               </div>
             </div>
             <footer class="card-footer">
-              <router-link to="/menu">
+              <router-link to="/">
                 <a v-if="!account.userPreferences" class="card-footer-item">Add Preferences</a>
               </router-link>
-              <router-link to="/menu">
+              <router-link to="/items">
                 <a v-if="!account.userFavourites" class="card-footer-item">Add Favorites</a>
               </router-link>
             </footer>

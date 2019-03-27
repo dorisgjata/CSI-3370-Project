@@ -1,23 +1,23 @@
 <template>
   <div class="navbar-menu">
     <div class="navbar-start">
-    <router-link to="/"><a class="navbar-item">Home</a></router-link>
-    <router-link to="/menu"><a class="navbar-item">Menu</a></router-link>
-    <router-link to="/"><a class="navbar-item">About</a></router-link>
-    <router-link to="/"><a class="navbar-item">Contact</a></router-link>
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/steps">Menu</a>
+    <a class="navbar-item">About</a>
+    <a class="navbar-item">Contact</a>
     </div>
     <div id="signin"></div>
     <div class="navbar-end">
       <a class="navbar-item" @click="goToAccount(userEmail)" v-if="isSignIn">Account</a>
       <div class="navbar-item">
         <button
-          class="button"
+          class="button is-primary"
           @click="handleClickSignIn"
           v-if="!isSignIn"
           :disabled="!isInit"
         >Sign In with Google</button>
         <button
-          class="button"
+          class="button is-primary"
           @click="handleClickSignOut"
           v-if="isSignIn"
           :disabled="!isInit"

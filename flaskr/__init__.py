@@ -95,28 +95,46 @@ def items():
     ITEM=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT itemId, itemName, itemPortion, itemingridents, itemNutrients FROM items JOIN filters ON filters.filterid = items.itemfilters'
+        sql="SELECT items.itemId, items.itemName, items.itemPortion, items.itemIngridents, items.itemNutrients, filters.filtername from filters inner join items on filters.filterid =  items.itemfilters"
         cur=conn.cursor()
         cur.execute(sql)
         items=cur.fetchall()
-        for (key, val) in items:
-            print(key, val)
+        it=[]
+        for item in items:
+            print(item)
+            item={
+                "itemId": item[0],
+                "itemName": item[1],
+                "itemPortion": item[2],
+                "itemIngridents": item[3],
+                "itemNutrients": item[4],
+                "itemFilters": item[5],
+            }
+            it.append(item)
+
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'items': ITEM})
+        response_object.update({'items': it})
     elif request.method=='POST':
         post_data=request.get_json()
         itemId= post_data.get('itemId')
         itemName= post_data.get('itemName')
         itemPortion=post_data.get('itemPortion')
-        itemIngredients=post_data.get('itemIngredients')
+        itemIngridents=post_data.get('itemIngridents')
         itemNutrients= post_data.get('itemNutrients')
-        itemFilters=post_data.get('itemFilters')       
+        itemFilters=post_data.get('filterId')       
         conn = db.get_db()
-        sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngredients, itemNutrients , itemFilters) VALUES (%s, %s, %s, %s, %s, %s)"
+        '''insert into items ( itemid, itemname, itemPortion, itemIngridents, itemNutrients , itemfilters) values (%s, %s, %s, %s, %s,(select filterid from filters where filterid=%s));
+
+insert into items ( itemid, itemname, itemfilters) values (4, 's', (select filterid from filters where filterid=1));
+
+
+'''
+        print(itemFilters)
+        sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters) VALUES (%s, %s, %s, %s, %s, %s)"
         cur=conn.cursor()
-        val=(itemId, itemName, itemPortion, itemIngredients, itemNutrients , itemFilters)
+        val=(itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters)
         cur.execute(sql, val)
         conn.commit()
         cur.close()
@@ -463,7 +481,7 @@ def single_item(itemId):
         itemId= post_data.get('itemId')
         itemName= post_data.get('itemName')
         itemPortion= post_data.get('itemPortion')
-        itemIngredients= post_data.get('itemIngredients')
+        itemIngridents= post_data.get('itemIngridents')
         itemNutrients= post_data.get('itemNutrients')
         itemFilters= post_data.get('itemFilters')
         conn = db.get_db()
