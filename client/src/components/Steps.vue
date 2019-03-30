@@ -7,11 +7,11 @@
       <b-tab-item label="Add Items">
         <Items/>
       </b-tab-item>
-      <b-tab-item label="Add Meal">
+      <b-tab-item label="Add Meals">
         <Meal/>
       </b-tab-item>
     </b-tabs>
-    <div class="section">
+<!--     <div class="section">
       <div class="columns is-centered" v-if="itemsData">
         <div v-for="(item, index) in itemsData" :key="index" class="column is-one-third">
           <div class="card">
@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

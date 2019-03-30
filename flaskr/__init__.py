@@ -359,20 +359,28 @@ def users():
 @cross_origin(origin='*')  
 def meal():
     response_object={'status': 'success'}    
-    CAT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT mealId, foodItem1, foodItem2, foodItem3, mealPeriod FROM meal'
+        sql = "SELECT meal.mealId, periods.mealPeriod, meal.mealName, items.itemName, items.itemName, items.itemName, from items inner join meal on items.itemid =  meal.foodItem1,  items.itemid =  meal.foodItem2,  items.itemid =  meal.foodItem1"
         cur=conn.cursor()
         cur.execute(sql)
-        meal=cur.fetchall()
-        for (key, val) in meal:
-            print(key,val)
-            #CAT.append({'mealId':key, 'mealCalories': val})
+        meals=cur.fetchall()
+        me=[]
+        for meal in meals:
+            print(meal)
+            item={
+                "mealId": meal[0],
+                "foodItem1": meal[1],
+                "foodItem2": meal[2],
+                "foodItem3": meal[3],
+                "mealPeriod": meal[4],
+                "mealName": meal[5],
+            }
+            me.append(meal)
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'meal': CAT})
+        response_object.update({'meals': me})
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
@@ -381,12 +389,12 @@ def meal():
         foodItem2=post_data.get('foodItem2')
         foodItem3=post_data.get('foodItem3')
         mealPeriod=post_data.get('mealPeriod')
-        #FILT.append({'mealId':periodID, 'mealCalories': periodNAME})
-        response_object.update({'meal': FILT}) 
+        mealName=post_data.get('mealName')
+        #response_object.update({'meal': FILT}) 
         conn = db.get_db()
-        sql = "INSERT INTO meal( mealId, foodItem1, foodItem2, foodItem3, mealPeriod) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO meal( mealId, foodItem1, foodItem2, foodItem3, mealPeriod, mealName) VALUES (%s, %s, %s, %s, %s, %s)"
         cur=conn.cursor()
-        val=(mealId, mealCalories, mealNutrients)
+        val=(mealId, foodItem1,foodItem2, foodItem3, mealPeriod, mealName)
         cur.execute(sql, val)
         conn.commit()
         cur.close()

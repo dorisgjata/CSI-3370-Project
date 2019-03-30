@@ -119,6 +119,41 @@
           </div>
         </form>
       </div>
+      <div class="column ">
+            <div class="card">
+          <div class="card-content">
+            <div class="title is-4">Current Food Items</div>
+            <b-table :data="itemsData" >
+            <template slot-scope="props">
+              <b-table-column
+                field="itemId"
+                label="Item Id"
+                width="40"
+                numeric
+              >{{ props.row.itemId }}</b-table-column>
+              <b-table-column
+                field="itemName"
+                label="Name"
+                width="40"
+                numeric
+              >{{ props.row.itemName }}</b-table-column>
+                  <b-table-column
+                field="itemPortion"
+                label="Portion"
+                width="40"
+                numeric
+              >{{ props.row.itemPortion }}</b-table-column>
+              <b-table-column
+                field="itemFilters"
+                label="Filter"
+                width="40"
+                numeric
+              >{{ props.row.itemFilters}}</b-table-column>
+            </template>
+          </b-table>
+      </div>
+      </div>
+      </div>
     </div>
   </div>
 </template>
