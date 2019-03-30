@@ -92,7 +92,6 @@ def filters():
 @cross_origin(origin='*')  
 def items():
     response_object={'status': 'success'}
-    ITEM=[]
     if request.method=='GET':
         conn = db.get_db()
         sql="SELECT items.itemId, items.itemName, items.itemPortion, items.itemIngridents, items.itemNutrients, filters.filtername from filters inner join items on filters.filterid =  items.itemfilters"
@@ -111,7 +110,6 @@ def items():
                 "itemFilters": item[5],
             }
             it.append(item)
-
         conn.commit()
         cur.close()
         conn.close()
@@ -126,10 +124,7 @@ def items():
         itemFilters=post_data.get('filterId')       
         conn = db.get_db()
         '''insert into items ( itemid, itemname, itemPortion, itemIngridents, itemNutrients , itemfilters) values (%s, %s, %s, %s, %s,(select filterid from filters where filterid=%s));
-
 insert into items ( itemid, itemname, itemfilters) values (4, 's', (select filterid from filters where filterid=1));
-
-
 '''
         print(itemFilters)
         sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters) VALUES (%s, %s, %s, %s, %s, %s)"
@@ -222,32 +217,32 @@ def categories():
 @cross_origin(origin='*')  
 def periods():
     response_object={'status': 'success'}    
-    CAT=[]
+    pe=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT periodId, periodName, periodCategory FROM periods JOIN categories ON categories.categoryid = periods.periodcategory'
+        #sql = 'SELECT periodId, periodName,periodCategory FROM periods JOIN categories ON categories.categoryid = periods.periodcategory'
+        sql = 'SELECT periodId, periodName FROM periods'
         cur=conn.cursor()
         cur.execute(sql)
         periods=cur.fetchall()
-        for (key, val) in periods:
-            print(key,val)
-            #CAT.append({'periodId':key, 'periodName': val})
+        for period in periods:
+            period={
+                'periodId':period[0], 
+                'periodName': period[1]}
+            pe.append(period)
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'periods': CAT})
+        response_object.update({'periods': pe})
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
         periodId= post_data.get('periodId'),
         periodName=post_data.get('periodName')
-        periodCategory=post_data.get('periodCategory')
-        #FILT.append({'periodId':periodID, 'periodName': periodNAME})
-        response_object.update({'periods': FILT}) 
         conn = db.get_db()
-        sql = "INSERT INTO periods(periodId, periodName,periodCategory) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO periods(periodId, periodName) VALUES (%s, %s)"
         cur=conn.cursor()
-        val=(periodId, periodName, periodCategory)
+        val=(periodId, periodName)
         cur.execute(sql, val)
         conn.commit()
         cur.close()
@@ -370,11 +365,11 @@ def meal():
             print(meal)
             meal={
                 "mealId": meal[0],
-                "foodItem1": meal[1],
-                "foodItem2": meal[2],
-                "foodItem3": meal[3],
-                "mealPeriod": meal[4],
-                "mealName": meal[5],
+                "mealName": meal[1],
+                "mealPeriod": meal[2],
+                "foodItem1": meal[3],
+                "foodItem2": meal[4],
+                "foodItem3": meal[5],
             }
             me.append(meal)
         conn.commit()
