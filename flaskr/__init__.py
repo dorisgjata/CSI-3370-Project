@@ -361,14 +361,14 @@ def meal():
     response_object={'status': 'success'}    
     if request.method=='GET':
         conn = db.get_db()
-        sql = "SELECT meal.mealId, periods.mealPeriod, meal.mealName, items.itemName, items.itemName, items.itemName, from items inner join meal on items.itemid =  meal.foodItem1,  items.itemid =  meal.foodItem2,  items.itemid =  meal.foodItem1"
+        sql = "SELECT meal.mealId, meal.mealName, periods.periodname, a.itemName as itemname1, b.itemname as itemname2,  c.itemname as itemname3  from meal inner join items a on meal.foodItem1=a.itemid inner join items b on meal.foodItem2=b.itemid inner join items c on meal.foodItem3=c.itemid inner join periods on meal.mealperiod=periods.periodid;"
         cur=conn.cursor()
         cur.execute(sql)
         meals=cur.fetchall()
         me=[]
         for meal in meals:
             print(meal)
-            item={
+            meal={
                 "mealId": meal[0],
                 "foodItem1": meal[1],
                 "foodItem2": meal[2],
