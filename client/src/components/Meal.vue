@@ -34,9 +34,9 @@
                 <div class="card-content">
                   <div class="media">
                     <div class="media-left">
-                         <figure class="image is-48x48">
-                    <img src="../assets/fav-menu.jpg" alt="food">
-                  </figure>
+                      <figure class="image is-48x48">
+                        <img src="../assets/fav-menu.jpg" alt="food">
+                      </figure>
                     </div>
                     <div class="media-content">
                       <p class="title is-4">{{item.itemName}}</p>
@@ -62,6 +62,24 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <b-field label="Period"></b-field>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <b-select v-model="addMealForm.mealPeriod" placeholder="Select a period">
+                  <option
+                    v-for="period in periodsData"
+                    :value="period.periodId"
+                    :key="period.periodId"
+                  >
+                    <div>{{ period.periodName }}</div>
+                  </option>
+                </b-select>
               </div>
             </div>
           </div>
@@ -101,11 +119,11 @@
               </div>
             </div>
           </div>
-            <div class="field-body">
-              <div style="padding:5px" class="field">
-                <button class="button is-primary is-pulled-right" @click="onSubmit">Submit</button>
-              </div>
+          <div class="field-body">
+            <div style="padding:5px" class="field">
+              <button class="button is-primary is-pulled-right" @click="onSubmit">Submit</button>
             </div>
+          </div>
         </b-tab-item>
       </b-tabs>
     </section>
@@ -121,6 +139,8 @@ export default {
     return {
       checkedRows: [],
       itemsData: [],
+      periodsData: [],
+      mealData: [],
       addMealForm: {
         mealId: "",
         foodItem1: "",
@@ -138,7 +158,31 @@ export default {
         .get(path)
         .then(res => {
           this.itemsData = res.data.items;
-          console.log(this.itemsData);
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    },
+    getMeals() {
+      const path = "http://localhost:5000/meal";
+      axios
+        .get(path)
+        .then(res => {
+          this.mealData = res.data.meals;
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    },
+    getPeriods() {
+      const path = "http://localhost:5000/periods";
+      axios
+        .get(path)
+        .then(res => {
+          this.periodsData = res.data.periods;
+          console.log(this.periodsData);
         })
         .catch(error => {
           // eslint-disable-next-line
@@ -193,6 +237,8 @@ export default {
   },
   created() {
     this.getItems();
+    this.getMeals();
+    this.getPeriods();
   }
 };
 </script>
