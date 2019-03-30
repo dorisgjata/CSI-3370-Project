@@ -1,6 +1,9 @@
 <template>
   <div class="steps" id="stepsDemo">
     <b-tabs v-model="activeTab">
+       <b-tab-item label="Add Periods">
+        <Periods/>
+      </b-tab-item>
       <b-tab-item label="Add Filters">
         <Filters/>
       </b-tab-item>
@@ -58,10 +61,13 @@ import axios from "axios";
 import Filters from "@/components/Filters";
 import Items from "@/components/Items";
 import Meal from "@/components/Meal";
+import Periods from "@/components/Periods";
+
 
 export default {
   name: "Steps",
   components: {
+    Periods,
     Filters,
     Items,
     Meal
