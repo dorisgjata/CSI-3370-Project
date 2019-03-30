@@ -1,144 +1,20 @@
 <template>
   <div class="steps" id="stepsDemo">
-    <!--     <div class="tabs">
-      <ul>
-        <li class="is-active">
-          <a>Select Filters</a>
-        </li>
-        <li>
-          <a>Other Attributes</a>
-        </li>
-      </ul>
-    </div>-->
-    <div class="columns is-mobile is-centered">
-      <div class="column is-half">
-        <form class="card">
-          <div class="card-content">
-            <div class="title is-4">Add Food Items</div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <b-field label="Filters"></b-field>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <b-select v-model="addItemForm.filterId" placeholder="Select a filter">
-                    <option v-for="filter in data" :value="filter.filterId" :key="filter.filterId">
-                      <div>{{ filter.filterName }}</div>
-                    </option>
-                  </b-select>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <b-field label="Item Id" label-for="item-id"/>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <b-input
-                      v-model="addItemForm.itemId"
-                      id="item-id"
-                      type="text"
-                      required
-                      placeholder="Enter Item Id"
-                    ></b-input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <b-field label="Item Name" label-for="item-name"/>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <b-input
-                      v-model="addItemForm.itemName"
-                      id="item-name"
-                      type="text"
-                      required
-                      placeholder="Enter Item Name"
-                    ></b-input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <b-field label="Portion" label-for="item-portion"/>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icon has-icon-right">
-                    <b-input
-                      v-model="addItemForm.itemPortion"
-                      id="item-portion"
-                      type="text"
-                      required
-                      placeholder="Enter Item Portion"
-                    ></b-input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <b-field label="Ingredients" label-for="item-ingredients"/>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-icon has-icon-right">
-                    <b-input
-                      v-model="addItemForm.itemIngredients"
-                      id="item-ingredients"
-                      type="text"
-                      required
-                      placeholder="Enter Item Ingredients"
-                    ></b-input>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="step-content has-text-centered">
-              <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                  <b-field label="Nutrients" label-for="item-nutrients"/>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <div class="control">
-                      <b-input
-                        v-model="addItemForm.itemNutrients"
-                        id="item-nutrients"
-                        type="text"
-                        required
-                        placeholder="Enter Item Nutrients"
-                      ></b-input>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field-body">
-              <div style="padding:5px" class="field">
-                <button class="button is-primary is-pulled-right" @click="onSubmit">Submit</button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <b-tabs v-model="activeTab">
+      <b-tab-item label="Add Filters">
+        <Filters/>
+      </b-tab-item>
+      <b-tab-item label="Add Items">
+        <Items/>
+      </b-tab-item>
+      <b-tab-item label="Add Meal">
+        <Meal/>
+      </b-tab-item>
+    </b-tabs>
     <div class="section">
       <div class="columns is-centered" v-if="itemsData">
         <div v-for="(item, index) in itemsData" :key="index" class="column is-one-third">
           <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img src="../assets/fav-menu.jpg" alt="food">
-              </figure>
-            </div>
             <div class="card-content">
               <div class="media">
                 <div class="media-left">
@@ -179,21 +55,22 @@
 
 <script>
 import axios from "axios";
+import Filters from "@/components/Filters";
+import Items from "@/components/Items";
+import Meal from "@/components/Meal";
 
 export default {
   name: "Steps",
+  components: {
+    Filters,
+    Items,
+    Meal
+  },
   data() {
     return {
-      data: [],
+      filtersData: [],
       itemsData: [],
-      addItemForm: {
-        filterId: "",
-        itemId: "",
-        itemName: "",
-        itemPortion: "",
-        itemIngredients: "",
-        itemNutrients: ""
-      }
+      activeTab: 0,
     };
   },
   methods: {
@@ -202,7 +79,7 @@ export default {
       axios
         .get(path)
         .then(res => {
-          this.data = res.data.filters;
+          this.filtersData = res.data.filters;
         })
         .catch(error => {
           // eslint-disable-next-line
@@ -222,54 +99,6 @@ export default {
           console.error(error);
         });
     },
-    addItem(payload) {
-      axios({
-        method: "post",
-        url: "http://localhost:5000/items",
-        data: {
-          filterId: payload.filterId,
-          itemId: payload.itemId,
-          itemName: payload.itemName,
-          itemPortion: payload.itemPortion,
-          itemIngredients: payload.itemIngredients,
-          itemNutrients: payload.itemNutrients
-        }
-      })
-        .then(function(response) {
-          console.log(payload);
-          this.success();
-          this.initForm();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    initForm() {
-      this.addItemForm.filterId = "";
-      this.addItemForm.itemId = "";
-      this.addItemForm.itemName = "";
-      this.addItemForm.itemPortion = "";
-      this.addItemForm.itemIngredients = "";
-      this.addItemForm.itemNutrients = "";
-    },
-    onSubmit(evt) {
-      evt.preventDefault();
-      const payload = {
-        filterId: this.addItemForm.filterId,
-        itemId: this.addItemForm.itemId,
-        itemName: this.addItemForm.itemName,
-        itemPortion: this.addItemForm.itemPortion,
-        itemIngredients: this.addItemForm.itemIngredients,
-        itemNutrients: this.addItemForm.itemNutrients
-      };
-      this.addItem(payload);
-    },
-    success() {
-      this.$toast.open({
-        message: "Something happened correctly!",
-        type: "is-success"
-      });
-    }
   },
   mounted() {},
   created() {
