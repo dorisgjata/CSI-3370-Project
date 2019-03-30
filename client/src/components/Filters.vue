@@ -1,66 +1,98 @@
 <template>
   <div class="conatiner">
-    <button type="button" value="add" class="button" @click="isCardModalActive = true">Add</button>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Filter Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(filter, index) in data" :key="index">
-          <td>{{ filter.filterId }}</td>
-          <td>{{ filter.filterName }}</td>
-          <td>
-            <button
-              type="button"
-              value="edit"
-              class="button"
-              @click="editFilter(filter),isUpdateModalActive = true"
-            >Update</button>
-            <button type="button" class="button" @click="deleteFilter(filter.filterId)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <b-modal :active.sync="isCardModalActive" :width="640" scroll="keep">
-      <div class="card">
-        <div class="card-content">
-          <form
-            class="w-100"
-            ref="addFilterModal"
-            id="add-modal"
-            title="Add a new filter"
-            hide-footer
-          >
-            <section>
-              <b-field id="form-id-group" label="Filter Id:" label-for="form-id-input">
-                <b-input
-                  id="form-id-input"
-                  type="int"
-                  v-model="addFilterForm.filterId"
-                  required
-                  placeholder="Enter Id"
-                ></b-input>
-              </b-field>
-
-              <b-field id="form-name-group" label=" Filter Name:" label-for="form-name-input">
-                <b-input
-                  id="form-name-input"
-                  type="text"
-                  v-model="addFilterForm.filterName"
-                  required
-                  placeholder="Enter Filter Name"
-                ></b-input>
-              </b-field>
-              <button class="button is-primary" @click="onSubmit">Submit</button>
-              <button class="button is-danger" @click="onReset">Reset</button>
-            </section>
-          </form>
+    <div class="columns">
+      <div class="column is-half">
+        <div class="card">
+          <div class="card-content">
+            <form
+              class="w-100"
+              ref="addFilterModal"
+              id="add-modal"
+              title="Add a new filter"
+              hide-footer
+            >
+              <section>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <b-field label="Filter Id" label-for="filter-id"/>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <b-input
+                          v-model="addFilterForm.filterId"
+                          id="filter-id"
+                          type="text"
+                          required
+                          placeholder="Enter Filter Id"
+                        ></b-input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <b-field label="Filter Name" label-for="filter-name"/>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <b-input
+                          v-model="addFilterForm.filterName"
+                          id="filter-name"
+                          type="text"
+                          required
+                          placeholder="Enter Filter Name"
+                        ></b-input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div style="padding:5px" class="field">
+                    <button class="button is-primary is-pulled-right" @click="onSubmit">Submit</button>
+                    <!-- <button class="button is-danger" @click="onReset">Reset</button> -->
+                  </div>
+                </div>
+              </section>
+            </form>
+          </div>
         </div>
       </div>
-    </b-modal>
+      <div class="column is-half">
+        <div class="card">
+          <div class="card-content">
+            <div class="title is-4">Current Food Items</div>
+            <b-table :data="data">
+              <template slot-scope="props">
+                <b-table-column field="filterId" label="Item Id" width="40">{{ props.row.filterId }}</b-table-column>
+                <b-table-column
+                  field="filterName"
+                  label="Name"
+                  width="40"
+                >{{ props.row.filterName }}</b-table-column>
+                <b-table-column label="Delete" width="40">
+                  <button
+                    type="button"
+                    class="button"
+                    @click="deleteFilter( props.row.filterId)"
+                  >Delete</button>
+                </b-table-column>
+                <b-table-column label="Update" width="40">
+                  <button
+                    type="button"
+                    value="edit"
+                    class="button"
+                    @click="editFilter(props.row),isUpdateModalActive = true"
+                  >Update</button>
+                </b-table-column>
+              </template>
+            </b-table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <b-modal :active.sync="isUpdateModalActive" :width="640" scroll="keep">
       <div class="card">
         <div class="card-content">
@@ -68,6 +100,7 @@
             <section>
               <b-field id="form--edit-id-group" label="Filter Id:" label-for="form-edit-id-input">
                 <b-input
+                disabled
                   id="form-edit-id-input"
                   type="int"
                   v-model="editFilterForm.filterId"
@@ -111,7 +144,6 @@ export default {
     return {
       data: [],
       trigger: "",
-      isCardModalActive: false,
       isUpdateModalActive: false,
       addFilterForm: {
         filterId: "",
@@ -217,7 +249,6 @@ export default {
       } else if (event.target.value === "edit") {
         this.editFilter(event.target.id);
       }
-      this.isCardModalActive = true;
     }
   },
   created() {
