@@ -78,8 +78,7 @@ img {
 }
 .main-nav .SearchBar button{
 float:right;
-
-padding: 6px;
+  padding: 6px;
   background: #ddd;
   font-size: 1.2rem;
   border: none;
