@@ -15,7 +15,7 @@ body {
   background: #ccc;
 margin:30px 30px;
   line-height: 1.0;
-  background-image:url("background.jpg");
+  background-image:url("Pictures/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -67,18 +67,42 @@ img {
   color: var(--light);
 }
 
-.SearchBar input[type=text]{
+.main-nav .SearchBar input[type=text]{
   text-align: left;
   font-size:1.2rem;
   background:#FFFFFF;
+  padding: 6px;
+  border: none;
   display: block;
-  padding:0.8rem;
-  width:290%;
+  width: 185%;
+}
+.main-nav .SearchBar button{
+float:right;
+
+padding: 6px;
+  background: #ddd;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+}
+.main-nav .button {
+  background-color: var(--primary);
+  border: none;
+  color: black;
+  padding: 6px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin: 5px 10px;
+  cursor: pointer;
+  border: 2px solid #555555;
+
 }
 body {
 margin: 0px;
   font-family: 'Abel', sans-serif;
-  background-image: url(background.jpg);
+  background-image: url(Pictures/background.jpg);
 
   background-size: cover;
   background-repeat: no-repeat;

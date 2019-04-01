@@ -16,7 +16,7 @@ body {
   background: #ccc;
 margin:30px 30px;
   line-height: 1.0;
-  background-image:url("background.jpg");
+  background-image:url("Pictures/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
