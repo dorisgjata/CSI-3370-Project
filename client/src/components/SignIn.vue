@@ -2,12 +2,13 @@
   <div class="navbar-menu">
     <div class="navbar-start">
     <a class="navbar-item" href="/">Home</a>
-    <a class="navbar-item" href="/steps">Menu</a>
+    <a class="navbar-item" href="/menu">Menu</a>
     <a class="navbar-item">About</a>
     <a class="navbar-item">Contact</a>
     </div>
     <div id="signin"></div>
     <div class="navbar-end">
+      <a class="navbar-item" v-if="userEmail='dorisgjata@gmail.com'" href="/steps">Admin</a>
       <a class="navbar-item" @click="goToAccount(userEmail)" v-if="isSignIn">Account</a>
       <div class="navbar-item">
         <button
