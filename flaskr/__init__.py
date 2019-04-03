@@ -126,7 +126,6 @@ def items():
         '''insert into items ( itemid, itemname, itemPortion, itemIngridents, itemNutrients , itemfilters) values (%s, %s, %s, %s, %s,(select filterid from filters where filterid=%s));
 insert into items ( itemid, itemname, itemfilters) values (4, 's', (select filterid from filters where filterid=1));
 '''
-        print(itemFilters)
         sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters) VALUES (%s, %s, %s, %s, %s, %s)"
         cur=conn.cursor()
         val=(itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters)
@@ -258,7 +257,7 @@ def storedPreferences():
     CAT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT preferenceId, preferenceCalories, preferenceNutrients FROM storedPreferences JOIN categories ON categories.categoryid = storedPreferences.periodcategory'
+        sql = 'SELECT preferenceId, preferenceCalories, preferenceNutrients FROM storedPreferences'
         cur=conn.cursor()
         cur.execute(sql)
         storedPreferences=cur.fetchall()
@@ -405,7 +404,7 @@ def favourites():
     CAT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT mealId, foodItem1, foodItem2, foodItem3, mealPeriod FROM meal'
+        sql = 'SELECT favouriteid, favouriterecommendation, favouritemeal, favouritecalories, relateduser from favourites'
         cur=conn.cursor()
         cur.execute(sql)
         meal=cur.fetchall()
@@ -438,7 +437,7 @@ def favourites():
         print("IDK")    
     return jsonify(response_object)
 #DELETE AND UPDATE FUNCT
-@app.route('/filters/<filterId>', methods=['GET','PUT','DELETE'])
+@app.route('/filters/<filterId>', methods=['GET','POST','DELETE'])
 @cross_origin(origin='*')  
 def single_filter(filterId):
     response_object={'status': 'success'}    
@@ -452,14 +451,15 @@ def single_filter(filterId):
         cur.close()
         conn.close()
         response_object['message']="DELETED"
-    elif request.method=='PUT':
+    elif request.method=='POST':
         post_data=request.get_json()
         filterID= post_data.get('filterId')
         filterNAME=post_data.get('filterName')
         conn = db.get_db()
-        sql = 'UPDATE filters SET filters.filterName = (%s) WHERE filters.id = (%s) '
+        sql = 'UPDATE filters SET filterName = (%s) WHERE filters.filterId = (%s) '
         cur=conn.cursor()
-        cur.executemany(sql,[(filterNAME,filterID)])
+        val=(filterNAME,filterID)
+        cur.execute(sql,val)
         conn.commit()
         cur.close()
         conn.close()
