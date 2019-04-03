@@ -1,9 +1,5 @@
 <template>
-  <div id="itemsview"> 
-    <div class="section">
-      <div class="columns is-centered" v-if="itemsData">
-        <div v-for="(item, index) in itemsData" :key="index" class="column is-one-third">
-          <div class="card">
+<div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
                 <img src="../assets/fav-menu.jpg" alt="food">
@@ -45,11 +41,7 @@
               </div>
             </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+          </div>   
 </template>
 
 <script>
@@ -57,26 +49,12 @@ import axios from "axios";
 
 export default {
   name: "ItemsView",
+  props: ['item'],
   data() {
     return {
-      itemsData: [],
     };
   },
   methods: {
-
-    getItems() {
-      const path = "http://localhost:5000/items";
-      axios
-        .get(path)
-        .then(res => {
-          this.itemsData = res.data.items;
-          console.log(this.itemsData);
-        })
-        .catch(error => {
-          // eslint-disable-next-line
-          console.error(error);
-        });
-    },
     onSubmit(evt) {
       evt.preventDefault();
       const payload = {
@@ -90,9 +68,5 @@ export default {
       this.addItem(payload);
     },
   },
-  mounted() {},
-  created() {
-    this.getItems();
-  }
 };
 </script>
