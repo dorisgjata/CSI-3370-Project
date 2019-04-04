@@ -26,6 +26,7 @@ CREATE TABLE items(
     itemPortion TEXT,
     itemIngridents TEXT,
     itemNutrients TEXT,
+    itemCalories INT,
     itemFilters INT REFERENCES filters(filterId)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
