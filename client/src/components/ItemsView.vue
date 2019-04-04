@@ -1,22 +1,12 @@
 <template>
-<div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img src="../assets/fav-menu.jpg" alt="food">
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="../assets/fav-menu.jpg" alt="food">
-                  </figure>
-                </div>
+ <section class="boxes">
+      <div class="box">
+
                 <div class="media-content">
                   <p class="title is-4">{{item.itemName}}</p>
-                  <p class="subtitle is-6">{{item.itemPortion}}</p>
                 </div>
-              </div>
+                <img src="../assets/fav-menu.jpg" alt="food">
+
               <div class="has-text-left">
                 <div>
                   <strong>Filter:</strong>
@@ -41,9 +31,45 @@
               </div>
             </div>
             </div>
-          </div>   
+          </section>   
 </template>
+<style>
+/* CSS Variables */
+:root {
+  --primary: #ddd;
+  --dark: #333;
+  --light: #fff;
+  --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
+}
 
+
+/* Boxes */
+.boxes {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.box {
+  background: var(--primary);
+  text-align: center;
+  padding: 1.5rem 2rem;
+  box-shadow: var(--shadow);
+}
+
+/* Info */
+.info {
+  background: var(--primary);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-gap: 35px;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 5rem;
+  font-size: 19px;
+}
+
+ 
+</style>
 <script>
 import axios from "axios";
 

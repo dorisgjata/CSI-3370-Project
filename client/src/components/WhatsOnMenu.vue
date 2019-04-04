@@ -51,16 +51,23 @@
     </div>
   </div>
 </template>
+<style>
+ .column {
+  display: flex;
+}
+</style>
 
 
 <script>
 import axios from "axios";
 import ItemsView from "@/components/ItemsView";
+import Boxes from "@/components/Boxes";
 
 export default {
   name: "Menu",
   components: {
-    ItemsView
+    ItemsView,
+    Boxes
   },
   data() {
     return {
