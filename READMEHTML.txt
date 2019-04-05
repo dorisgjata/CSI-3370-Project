@@ -1,0 +1,1 @@
+Some images aren't used. They are there for future use or maybe be deleted soon.

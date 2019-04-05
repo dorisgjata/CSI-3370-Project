@@ -7,16 +7,18 @@
 }
 
 html {
+
   box-sizing: border-box;
-    font-family: 'Gloria Hallelujah', cursive;
+    font-family: 'Open Sans', sans-serif;
   color: var(--dark);
 }
 
 body {
+
   background: #ccc;
 margin:30px 30px;
   line-height: 1.0;
-  background-image:url("background.jpg");
+  background-image:url("Pictures/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -68,14 +70,6 @@ img {
 }
 
 
-.SearchBar input[type=text]{
-  text-align: left;
-  font-size:1.2rem;
-  background:#FFFFFF;
-  display: block;
-  padding:0.8rem;
-  width:290%;
-}
 
 
 .main-nav .button {
@@ -107,7 +101,7 @@ img {
   grid-area: showcase;
   height: 479px;
   width: 1295px;
-  background-image: url(food3.jpg);
+  background-image: url(Pictures/food3.jpg);
   background-size: cover;
   background-position: center;
 
