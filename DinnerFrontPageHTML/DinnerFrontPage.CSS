@@ -9,7 +9,7 @@
 html {
 
   box-sizing: border-box;
-    font-family: 'Gloria Hallelujah', cursive;
+    font-family: 'Open Sans', sans-serif;
   color: var(--dark);
 }
 
@@ -69,24 +69,7 @@ img {
   color: var(--light);
 }
 
-.main-nav .SearchBar input[type=text]{
-  text-align: left;
-  font-size:1.2rem;
-  background:#FFFFFF;
-  padding: 6px;
-  border: none;
-  display: block;
-  width: 185%;
-}
-.main-nav .SearchBar button{
-float:right;
 
-padding: 6px;
-  background: #ddd;
-  font-size: 1.2rem;
-  border: none;
-  cursor: pointer;
-}
 
 
 .main-nav .button {
