@@ -77,13 +77,11 @@
 <script>
 import axios from "axios";
 import ItemsView from "@/components/ItemsView";
-import Boxes from "@/components/Boxes";
 
 export default {
   name: "Menu",
   components: {
     ItemsView,
-    Boxes
   },
   data() {
     return {
