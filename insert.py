@@ -2,16 +2,18 @@ import psycopg2
 
 def insert(param):
     conn = None
-    sql = "INSERT INTO campusLocations(locationId, locationName) VALUES (%s, %s)"
+    #sql = "INSERT INTO campusLocations(locationId, locationName) VALUES (%s, %s)"
     filtersql = "INSERT INTO filters(filterId, filterName) VALUES (%s, %s)"
-    usersql = "INSERT INTO users(userId, userName, userPassword, userPreferences, isAdmin ) VALUES (%s, %s)"
+    usersql = "INSERT INTO users(userId, userName, userPassword, userPreferences, isAdmin ) VALUES (%s, %s, %s, %s, %s)"
+    sql = 'DELETE FROM filters WHERE filterId = (%s)'
 
     try:
         print('Connecting to the PostgreSQL database')
         conn = psycopg2.connect(host="localhost", database="dinning", user="postgres", password="postgres")
         cur=conn.cursor()
+        #cur.executemany(sql,param)
 
-        cur.executemany(filtersql,param)
+        cur.execute(sql,param)
         conn.commit()
         cur.close()
 
@@ -23,6 +25,6 @@ def insert(param):
             print('Database connection closed.')
 
 if __name__ == '__main__':
-  #  insert([(1,'Hillcrest'),(2,'Vanderberg')])
+  insert('1')
   #insert([(1,'Vegetarian'),(2,'Vegan'),(3,'Balanced'),(4,'Milk'),(5,'Tomato'),(6,'Gluten'),(7,'Wheat'),(8,'Nuts')])
-    insert([(1,'dorisgjata', 'admin', 'none', True ),(1,'olivia', 'olivia', 'none', False )])
+   # insert([(1,'dorisgjata', 'admin', 'none', True ),(1,'olivia', 'olivia', 'none', False )])

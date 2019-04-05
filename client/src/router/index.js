@@ -1,27 +1,35 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Locations from '@/components/Locations';
+import WhatsOnMenu from '@/components/WhatsOnMenu';
 import Menu from '@/components/Menu';
-import Filters from '@/components/Filters';
+import Account from '@/components/Account';
+import Steps from '@/components/Steps';
+
+
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
+      {
+        path: '/account/:email',
+        name: 'account',
+        component: Account,
+      },
     {
-      path: '/locations',
-      name: 'Locations',
-      component: Locations,
-    },
-    {
-      path: '/filters',
-      name: 'Filters',
-      component: Filters,
+      path: '/parsedmenu',
+      name: 'Menu',
+      component: Menu,
     },
     {
       path: '/menu',
-      name: 'Menu',
-      component: Menu,
+      name: 'WhatsOnMenu',
+      component: WhatsOnMenu,
+    },
+    {
+      path: '/steps',
+      name: 'steps',
+      component: Steps,
     },
   ],
   mode: 'history',

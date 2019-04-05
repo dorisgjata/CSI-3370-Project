@@ -26,6 +26,7 @@ CREATE TABLE items(
     itemPortion TEXT,
     itemIngridents TEXT,
     itemNutrients TEXT,
+    itemCalories INT,
     itemFilters INT REFERENCES filters(filterId)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -56,10 +57,14 @@ CREATE TABLE periods(
    );
 --user account--
 CREATE TABLE users(
-    userId INT PRIMARY KEY,
+    userIdToken VARCHAR PRIMARY KEY,
     userName TEXT,
-    userPassword TEXT,
-    userPreferences TEXT,
+    userLastName TEXT,
+    userEmail TEXT,
+    userPreferences INT REFERENCES storedPreferences(preferenceId)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    userFavorites INT REFERENCES favourites(favouriteId)
+    ON UPDATE CASCADE ON DELETE CASCADE,
     isAdmin BOOLEAN
 );
 --users preferences--
@@ -80,7 +85,8 @@ CREATE TABLE meal(
     foodItem3 INT REFERENCES items (itemId)
     ON UPDATE CASCADE ON DELETE CASCADE,
     mealPeriod INT REFERENCES periods(periodId)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    mealName TEXT
 );
 --users saved favourites--
 CREATE TABLE favourites(
