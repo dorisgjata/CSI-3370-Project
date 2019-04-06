@@ -4,6 +4,7 @@ import WhatsOnMenu from '@/components/WhatsOnMenu';
 import Menu from '@/components/Menu';
 import Account from '@/components/Account';
 import Steps from '@/components/Steps';
+import Contact from '@/components/Contact';
 
 
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/steps',
       name: 'steps',
       component: Steps,
+    },
+    {
+      path: '/contact',
+      name: 'Contact',
+      component: Contact,
     },
   ],
   mode: 'history',
