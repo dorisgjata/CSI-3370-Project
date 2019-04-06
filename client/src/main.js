@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import SignIn from './components/SignIn'
+import Footer from './components/Footer'
 
 import router from './router'
 import Buefy from "buefy"
@@ -29,4 +30,10 @@ new Vue({
   router,
   components: { SignIn },
   template: '<SignIn/>',
+});
+new Vue({
+  el: '#footer',
+  router,
+  components: { Footer },
+  template: '<Footer/>',
 });
