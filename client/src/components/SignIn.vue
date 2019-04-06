@@ -2,13 +2,13 @@
   <div class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item" href="/">Home</a>
-      <a class="navbar-item" href="/menu">Menu</a>
+      <a class="navbar-item"  v-if="isSignIn" href="/menu">Menu</a>
       <a class="navbar-item">About</a>
       <a class="navbar-item" href="/contact">Contact</a>
     </div>
     <div id="signin"></div>
     <div class="navbar-end">
-      <a class="navbar-item" v-if="userEmail='dorisgjata@gmail.com'" href="/steps">Admin</a>
+      <a class="navbar-item" v-if="(isSignIn) && (userEmail='dorisgjata@gmail.com')" href="/steps">Admin</a>
       <a class="navbar-item" @click="goToAccount(userEmail)" v-if="isSignIn">Account</a>
       <div class="navbar-item">
         <button
@@ -170,6 +170,7 @@ export default {
         .then(() => {
           // On success do something
           this.isSignIn = this.$gAuth.isAuthorized;
+          this.$router.push('/contact')
         })
         .catch(error => {
           // On fail do something
