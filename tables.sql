@@ -57,15 +57,13 @@ CREATE TABLE periods(
    );
 --user account--
 CREATE TABLE users(
-    userIdToken VARCHAR PRIMARY KEY,
+    userIdToken VARCHAR,
+    accesToken VARCHAR,
     userName TEXT,
     userLastName TEXT,
     userEmail TEXT,
-    userPreferences INT REFERENCES storedPreferences(preferenceId)
-    ON UPDATE CASCADE ON DELETE CASCADE,
-    userFavorites INT REFERENCES favourites(favouriteId)
-    ON UPDATE CASCADE ON DELETE CASCADE,
-    isAdmin BOOLEAN
+    isAdmin BOOLEAN,
+    primary key (userEmail)
 );
 --users preferences--
 CREATE TABLE storedPreferences(
@@ -74,6 +72,8 @@ CREATE TABLE storedPreferences(
     preferenceNutrients TEXT,
     preferenceFilters INT REFERENCES filters(filterId)
     ON UPDATE CASCADE ON DELETE CASCADE
+    userId text REFERENCES users(userEmail) 
+    ON UPDATE CASCADE ON DELETE CASCADE);
     );
 --daily meal with max 3 items--
 CREATE TABLE meal(
@@ -90,10 +90,28 @@ CREATE TABLE meal(
 );
 --users saved favourites--
 CREATE TABLE favourites(
-    favouriteId INT PRIMARY KEY,
+    favoriteid SERIAL PRIMARY KEY,
     favouriteRecommendation INT REFERENCES meal(mealId) 
     ON UPDATE CASCADE ON DELETE CASCADE,
     favouriteMeal INT REFERENCES meal(mealId) 
     ON UPDATE CASCADE ON DELETE CASCADE,
-    favouriteCalories TEXT
+    favouriteItem INT REFERENCES items(itemId) 
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    userId text REFERENCES users(userEmail) 
+    ON UPDATE CASCADE ON DELETE CASCADE
+    );
+
+CREATE TABLE favouriteItems(
+    id SERIAL PRIMARY KEY,
+    userId TEXT REFERENCES users(userEmail) 
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    favouriteItem INT REFERENCES items(itemId) 
+    ON UPDATE CASCADE ON DELETE CASCADE
+);
+CREATE TABLE favouriteMeals(
+    id SERIAL PRIMARY KEY,
+    userId TEXT REFERENCES users(userEmail) 
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    favouriteMeal INT REFERENCES meal(mealId) 
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
