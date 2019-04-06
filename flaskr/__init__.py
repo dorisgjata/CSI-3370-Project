@@ -293,7 +293,7 @@ def storedPreferences():
 def get_users(userEmail):
     response_object={}    
     conn = db.get_db()
-    sql = 'SELECT userName, userPreferences, userFavorites FROM users WHERE userEmail= users.userEmail'
+    sql = "SELECT users.userName, favourites.favouriteMeal, favourites.favouriteItem from users inner join favourites on users.userEmail=favourites.userid"
     cur=conn.cursor()
     cur.execute(sql)
     users=cur.fetchone()
@@ -302,8 +302,8 @@ def get_users(userEmail):
     conn.close()
     user={
         "userName":users[0],
-        "userPreferences":users[1],
-        "userFavorites":users[2],
+        "favouriteMeal":users[1],
+        "favouriteItem":users[2],
     }
     response_object.update(user)
     return jsonify(response_object)
@@ -325,7 +325,6 @@ def users():
         conn.close()
     elif request.method=='POST':
         post_data=request.get_json()
-        print(post_data)
         tokenId= post_data.get('tokenId')
         firstName=post_data.get('firstName')
         lastName=post_data.get('lastName')
@@ -334,14 +333,12 @@ def users():
             isAdmin= True
         else:
             isAdmin=False
-        #FILT.append({'userId':periodID, 'userName': periodNAME})
         response_object.update({'users': post_data}) 
-        conn = db.get_db()
-        
-        sql = "INSERT INTO users(userIdToken, userName , userLastName ,userEmail, isAdmin) VALUES (%s, %s, %s, %s, %s)"
-        
+        conn = db.get_db()    
+       	sql = 'SELECT * FROM "addUser"(CAST(%s AS VARCHAR), CAST(%s AS TEXT), CAST(%s AS TEXT), CAST(%s AS TEXT), %s)'  
+        # sql = " INSERT INTO users(userIdToken, userName , userLastName ,userEmail, isAdmin) VALUES (%s, %s, %s, %s, %s)"       
         cur=conn.cursor()
-        val=(tokenId, firstName,lastName, email)
+        val=(tokenId, firstName,lastName, email, isAdmin)
         cur.execute(sql, val)
         conn.commit()
         cur.close()
@@ -397,38 +394,45 @@ def meal():
         print("IDK")    
     return jsonify(response_object)
 
-@app.route('/favourites', methods=['GET','POST'])
+@app.route('/favourites/<userEmail>', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def favourites():
     response_object={'status': 'success'}    
     CAT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT favouriteid, favouriterecommendation, favouritemeal, favouritecalories, relateduser from favourites'
-        cur=conn.cursor()
+        sql = 'SELECT userId, favouriteItem, favouriteMeal,favouriteRecommendation from favourites  WHERE favourites= users.userId'
+        ur=conn.cursor()
         cur.execute(sql)
-        meal=cur.fetchall()
-        for (key, val) in meal:
-            print(key,val)
-            #CAT.append({'mealId':key, 'mealCalories': val})
+        favs=cur.fetchall()
+        fav=[]
+        for fav in favs:
+            userId, favouriteItem, favouriteMeal  
+            print(fav)
+            fa={
+                "userId": fav[0],
+                "favouriteItem": fav[1],
+                "favouriteMeal": fav[2],
+                "favouriteRecommendation": fav[3],
+            }
+            fav.append(fa)
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'meal': CAT})
+        response_object.update({'favorites': fav})
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
-        mealId= post_data.get('mealId'),
-        foodItem1=post_data.get('foodItem1')
-        foodItem2=post_data.get('foodItem2')
-        foodItem3=post_data.get('foodItem3')
-        mealPeriod=post_data.get('mealPeriod')
+        userId= post_data.get('userId')
+        favouriteItem=post_data.get('favouriteItem')
+        favouriteMeal=post_data.get('favouriteMeal')
+        favouriteRecommendation=post_data.get('favouriteRecommendation')
         #FILT.append({'mealId':periodID, 'mealCalories': periodNAME})
         response_object.update({'meal': FILT}) 
         conn = db.get_db()
-        sql = "INSERT INTO meal( mealId, foodItem1, foodItem2, foodItem3, mealPeriod) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO  userId, favouriteItem, favouriteMeal,favouriteRecommendation VALUES (%s, %s, %s, %s)"
         cur=conn.cursor()
-        val=(mealId, mealCalories, mealNutrients)
+        val=( userId, favouriteItem, favouriteMeal,favouriteRecommendation )
         cur.execute(sql, val)
         conn.commit()
         cur.close()
