@@ -1,6 +1,7 @@
 <template>
-  <div class="steps" id="stepsDemo">
-    <b-tabs v-model="activeTab">
+  <div class="steps">
+           <b-tabs position="is-centered" class="block"
+  v-model="activeTab">
        <b-tab-item label="Add Periods">
         <Periods/>
       </b-tab-item>
@@ -55,6 +56,14 @@
     </div> -->
   </div>
 </template>
+<style>
+.tabs{
+  background-color: white;
+}
+.tab-content{
+  background-color:  #ddd;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -88,7 +97,6 @@ export default {
           this.filtersData = res.data.filters;
         })
         .catch(error => {
-          // eslint-disable-next-line
           console.error(error);
         });
     },
@@ -101,7 +109,6 @@ export default {
           console.log(this.itemsData);
         })
         .catch(error => {
-          // eslint-disable-next-line
           console.error(error);
         });
     },
