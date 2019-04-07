@@ -1,37 +1,39 @@
 <template>
- <section class="boxes">
-      <div class="box">
+  <section class="boxes">
+    <div class="box">
+      <div class="media-content">
+        <p class="title is-4">{{item.itemName}}</p>
+      </div>
+      <img src="../assets/fav-menu.jpg" alt="food">
 
-                <div class="media-content">
-                  <p class="title is-4">{{item.itemName}}</p>
-                </div>
-                <img src="../assets/fav-menu.jpg" alt="food">
-
-              <div class="has-text-left">
-                <div>
-                  <strong>Filter:</strong>
-                  {{item.itemFilters}}
-                </div>
-                <div>
-                  <strong>Ingredients:</strong>
-                  {{item.itemIngridents}}
-                </div>
-                <div>
-                  <strong>Calories and Nutrients:</strong>
-                  {{item.itemNutrients}}
-                </div>
-                <div>
-                  <strong>Portion:</strong>
-                  {{item.itemPortion}}
-                </div>
-              </div>
-              <div class="field-body">
-              <div style="padding:5px" class="field">
-                <button class="button is-primary is-pulled-right" @click="onSubmit">Add Favourite</button>
-              </div>
-            </div>
-            </div>
-          </section>   
+      <div class="has-text-left">
+        <div>
+          <strong>Filter:</strong>
+          {{item.itemFilters}}
+        </div>
+        <div>
+          <strong>Ingredients:</strong>
+          {{item.itemIngridents}}
+        </div>
+        <div>
+          <strong>Calories and Nutrients:</strong>
+          {{item.itemNutrients}}
+        </div>
+        <div>
+          <strong>Portion:</strong>
+          {{item.itemPortion}}
+        </div>
+      </div>
+      <div class="field-body">
+        <div style="padding:5px" class="field">
+          <button
+            class="button is-primary is-pulled-right"
+            @click="addItem(item,user)"
+          >Add Favourite</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 <style>
 /* CSS Variables */
@@ -41,7 +43,6 @@
   --light: #fff;
   --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
 }
-
 
 /* Boxes */
 .boxes {
@@ -67,32 +68,55 @@
   padding: 5rem;
   font-size: 19px;
 }
-
- 
 </style>
 <script>
 import axios from "axios";
 
 export default {
   name: "ItemsView",
-  props: ['item'],
+  props: ["item", "user"],
   data() {
     return {
+      userEmail: this.$router.history.current.params.email,
+      payload: {
+        userEmail: "",
+        favouriteItem: ""
+      }
     };
   },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      const payload = {
-        filterId: this.addItemForm.filterId,
-        itemId: this.addItemForm.itemId,
-        itemName: this.addItemForm.itemName,
-        itemPortion: this.addItemForm.itemPortion,
-        itemIngredients: this.addItemForm.itemIngredients,
-        itemNutrients: this.addItemForm.itemNutrients
-      };
-      this.addItem(payload);
+      getAccount(){
+        return this.userEmail
+      },
+
+     addItem(item,user)  {
+       const userEmail = user;
+       console.log("add",userEmail)
+      const url = `http://localhost:5000/user/${userEmail}/favourites`;
+      fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        //body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(response => {
+          // console.log("Success:", JSON.stringify(response));
+          this.account = response;
+          // console.log(this.account.userPreferences);
+        })
+        .catch(error => console.error("Error:", error));
     },
+
+    
   },
+  created() {
+ 
+    console.log(this.user)
+    console.log("Created", this.$router);
+    this.getAccount();
+  }
 };
 </script>
