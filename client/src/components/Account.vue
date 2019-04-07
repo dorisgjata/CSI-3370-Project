@@ -38,7 +38,7 @@
 
         <div class="column is-one-third">
           <p class="title is-5">Favorites</p>
-          <div v-if="!account.userFavourites">
+          <div v-if="!favorites">
             <div class="card">
               <div class="card-content">
                 <div class="media-content">
@@ -48,8 +48,8 @@
             </div>
           </div>
           <!-- TODO -->
-          <div v-if="account.userFavourites">
-            <div v-for="(fav, index) in account.userFavourites" :key="index">
+          <div v-if="favorites">
+            <div v-for="(fav, index) in favorites" :key="index">
               <div class="card">
                 <div class="card-content">
                   <div class="media">
@@ -59,9 +59,7 @@
                       </figure>
                     </div>
                     <div class="media-content">
-                      <p class="title is-6">{{fav.favouriteRecommendation}}</p>
-                      <p class="title is-6">{{fav.favouriteMeal}}</p>
-                      <p class="title is-6">{{fav.favouriteCalories}}</p>
+                      <p class="title is-6">{{fav.itemName}}</p>
                     </div>
                   </div>
                 </div>
@@ -114,7 +112,9 @@ export default {
   name: "SignIn",
   data() {
     return {
-      account: null
+      account: null,
+      favorites:null,
+
     };
   },
   methods: {
@@ -130,16 +130,31 @@ export default {
       })
         .then(res => res.json())
         .then(response => {
-          console.log("Success:", JSON.stringify(response));
+          // console.log("Success:", JSON.stringify(response));
           this.account = response;
-          console.log(this.account.userPreferences);
+          // console.log(this.account.userPreferences);
         })
         .catch(error => console.error("Error:", error));
+    },
+    getUserFavorites(userEmail) {
+      axios
+        .get(`http://localhost:5000/user/${userEmail}/favourites`)
+        .then(res => {
+          console.log(res.data.favorites);
+          this.favorites= res.data.favorites;
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     }
   },
   created() {
-    const userEmail = this.$router.history.current.params.email;
-    this.getAccount(userEmail);
+    this.userEmail = this.$router.history.current.params.email;
+    console.log("ROUTER",this.$router)
+    this.getUserFavorites(this.userEmail);
+        this.getAccount(this.userEmail);
+
   }
 };
 </script>
