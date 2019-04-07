@@ -2,14 +2,14 @@
   <div class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item" href="/">Home</a>
-      <a class="navbar-item"  v-if="isSignIn" href="/menu">Menu</a>
+      <a class="navbar-item"  v-if="isSignIn" @click="goToMenu(user)">Menu</a>
       <a class="navbar-item">About</a>
       <a class="navbar-item" href="/contact">Contact</a>
     </div>
     <div id="signin"></div>
     <div class="navbar-end">
-      <a class="navbar-item" v-if="(isSignIn) && (userEmail='dorisgjata@gmail.com')" href="/steps">Admin</a>
-      <a class="navbar-item" @click="goToAccount(userEmail)" v-if="isSignIn">Account</a>
+      <a class="navbar-item" v-if="(isSignIn) && (user='dorisgjata@gmail.com')" href="/steps">Admin</a>
+      <a class="navbar-item" @click="goToAccount(user)" v-if="isSignIn">Account</a>
       <div class="navbar-item">
         <button
           type="button"
@@ -128,6 +128,7 @@ export default {
     return {
       isInit: false,
       isSignIn: false,
+      user:"",
       userEmail: "dorisgjata@gmail.com"
     };
   },
@@ -137,7 +138,7 @@ export default {
         .signIn()
         .then(googleuser => {
           this.isSignIn = this.$gAuth.isAuthorized;
-          const user = googleuser.w3.ofa;
+          this.user = googleuser.w3.ofa;
           this.userEmail = googleuser.w3.U3;
           const data = {
             firstName: googleuser.w3.ofa,
@@ -178,6 +179,9 @@ export default {
     },
     goToAccount(userEmail) {
       this.$router.push({ name: "account", params: { email: this.userEmail } });
+    },
+    goToMenu(userEmail) {
+      this.$router.push({ name: "menu", params: { email: this.userEmail } });
     }
   },
   mounted() {
@@ -188,7 +192,9 @@ export default {
       if (that.isInit) clearInterval(checkGauthLoad);
       if (that.isSignIn) {
         console.log(that.$gAuth);
-        this.user = that.$gAuth.googleuser.w3.ig;
+        this.user = that.$gAuth.GoogleAuth.currentUser.Ab.w3.U3;
+        console.log("user",this.user);
+
       }
     }, 1000);
   },
