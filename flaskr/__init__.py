@@ -288,22 +288,22 @@ def storedPreferences():
         print("IDK")    
     return jsonify(response_object)
 
-@app.route('/user/<userEmail>', methods=['GET'])
+@app.route('/user/<string:userEmail>', methods=['GET'])
 @cross_origin(origin='*')  
 def get_users(userEmail):
     response_object={}    
     conn = db.get_db()
-    sql = "SELECT users.userName, favourites.favouriteMeal, favourites.favouriteItem from users inner join favourites on users.userEmail=favourites.userid"
+    userEmail = request.args.get('userEmail')
+    sql = "SELECT users.userName from users where users.useremail =userEmail"
     cur=conn.cursor()
     cur.execute(sql)
     users=cur.fetchone()
+    print(users)
     conn.commit()
     cur.close()
     conn.close()
     user={
-        "userName":users[0],
-        "favouriteMeal":users[1],
-        "favouriteItem":users[2],
+        "userName":users[0],        
     }
     response_object.update(user)
     return jsonify(response_object)
@@ -394,45 +394,41 @@ def meal():
         print("IDK")    
     return jsonify(response_object)
 
-@app.route('/favourites/<userEmail>', methods=['GET','POST'])
+@app.route('/user/<string:userEmail>/favourites', methods=['GET','POST'])
 @cross_origin(origin='*')  
-def favourites():
+def favourites(userEmail):
     response_object={'status': 'success'}    
-    CAT=[]
+    FILT=[]
     if request.method=='GET':
         conn = db.get_db()
-        sql = 'SELECT userId, favouriteItem, favouriteMeal,favouriteRecommendation from favourites  WHERE favourites= users.userId'
-        ur=conn.cursor()
-        cur.execute(sql)
+        userEmail = request.args.get('userEmail')
+        sql = "SELECT favourites.favouriteItem, items.itemName from favourites INNER JOIN items on favourites.favouriteItem = items.itemid where favourites.useremail = userEmail"
+       # sql = " SELECT coalesce( (select (favouriteMeal, favouriteItem) from favourites where favourites.useremail=''))"
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,))
         favs=cur.fetchall()
-        fav=[]
+        favor=[]
         for fav in favs:
-            userId, favouriteItem, favouriteMeal  
-            print(fav)
             fa={
-                "userId": fav[0],
-                "favouriteItem": fav[1],
-                "favouriteMeal": fav[2],
-                "favouriteRecommendation": fav[3],
+                "favouriteItem": fav[0],
+                "itemName": fav[1],
             }
-            fav.append(fa)
+            favor.append(fa)
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'favorites': fav})
+        response_object.update({'favorites': favor})
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)
-        userId= post_data.get('userId')
+        useremail= post_data.get('userEmail')
         favouriteItem=post_data.get('favouriteItem')
         favouriteMeal=post_data.get('favouriteMeal')
         favouriteRecommendation=post_data.get('favouriteRecommendation')
-        #FILT.append({'mealId':periodID, 'mealCalories': periodNAME})
-        response_object.update({'meal': FILT}) 
         conn = db.get_db()
-        sql = "INSERT INTO  userId, favouriteItem, favouriteMeal,favouriteRecommendation VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO favourites( useremail, favouriteItem, favouriteMeal,favouriteRecommendation) VALUES (%s, %s, %s, %s)"
         cur=conn.cursor()
-        val=( userId, favouriteItem, favouriteMeal,favouriteRecommendation )
+        val=( useremail, favouriteItem, favouriteMeal,favouriteRecommendation )
         cur.execute(sql, val)
         conn.commit()
         cur.close()
