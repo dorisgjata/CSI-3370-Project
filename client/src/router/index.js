@@ -23,7 +23,7 @@ export default new Router({
       component: Menu,
     },
     {
-      path: '/menu',
+      path: '/menu/:email',
       name: 'WhatsOnMenu',
       component: WhatsOnMenu,
     },
