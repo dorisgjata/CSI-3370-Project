@@ -16,12 +16,16 @@
           {{item.itemIngridents}}
         </div>
         <div>
-          <strong>Calories and Nutrients:</strong>
+          <strong>Nutrients:</strong>
           {{item.itemNutrients}}
         </div>
         <div>
           <strong>Portion:</strong>
           {{item.itemPortion}}
+        </div>
+          <div>
+          <strong>Calories:</strong>
+          {{item.itemCalories}}
         </div>
       </div>
       <div class="field-body">
