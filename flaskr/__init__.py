@@ -452,7 +452,7 @@ def favourite_meal(userEmail):
     if request.method=='GET':
         conn = db.get_db()
         userEmail = request.args.get('userEmail')
-        sql = "SELECT favouritemeals.favouriteItem, meal.mealName from favouritemeals INNER JOIN meal on favouritemeals.favouritemeal = meal.mealid where favouritemeals.useremail = userEmail"
+        sql = "SELECT favouritemeals.favouriteMeal, meal.mealName from favouritemeals INNER JOIN meal on favouritemeals.favouritemeal = meal.mealid where favouritemeals.useremail = userEmail"
        # sql = " SELECT coalesce( (select (favouriteMeal, favouriteItem) from favourites where favourites.useremail=''))"
         cur=conn.cursor()
         cur.execute(sql,(userEmail,))
@@ -467,7 +467,7 @@ def favourite_meal(userEmail):
         conn.commit()
         cur.close()
         conn.close()
-        response_object.update({'favorites': favor})
+        response_object.update({'favoritemeals': favor})
     elif request.method=='POST':
         post_data=request.get_json()
         print(post_data)

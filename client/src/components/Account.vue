@@ -25,9 +25,17 @@
               </div>
             </div>
             <footer class="card-footer">
-                <a v-if="!account.userPreferences"  @click="goToMenu()" class="card-footer-item">Add Favorite Meals</a>
+              <a
+                v-if="!account.userPreferences"
+                @click="goToMenu()"
+                class="card-footer-item"
+              >Add Favorite Meals</a>
 
-                <a v-if="!account.userFavourites"  @click="goToMenu()" class="card-footer-item">Add Favorite Items</a>
+              <a
+                v-if="!account.userFavourites"
+                @click="goToMenu()"
+                class="card-footer-item"
+              >Add Favorite Items</a>
             </footer>
           </div>
         </div>
@@ -64,7 +72,7 @@
           </div>
         </div>
 
-             <div class="column is-one-third">
+        <div class="column is-one-third">
           <p class="title is-5">Favorite Meals</p>
           <div v-if="!favoriteMeals">
             <div class="card">
@@ -95,7 +103,7 @@
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -108,9 +116,8 @@ export default {
   data() {
     return {
       account: null,
-      favorites:null,
-      favoriteMeals:null,
-
+      favorites: null,
+      favoriteMeals: null
     };
   },
   methods: {
@@ -137,36 +144,39 @@ export default {
         .get(`http://localhost:5000/user/${userEmail}/favourites`)
         .then(res => {
           console.log(res.data.favorites);
-          this.favorites= res.data.favorites;
+          this.favorites = res.data.favorites;
         })
         .catch(error => {
           // eslint-disable-next-line
           console.error(error);
         });
     },
-      getMealFavorites(userEmail) {
+    getMealFavorites(userEmail) {
       axios
         .get(`http://localhost:5000/user/${userEmail}/favouritemeal`)
         .then(res => {
-          console.log(res.data.favorites);
-          this.favorites= res.data.favoriteMeals;
+          console.log(res.data);
+          this.favoriteMeals = res.data.favoritemeals;
         })
         .catch(error => {
           // eslint-disable-next-line
           console.error(error);
         });
     },
-      goToMenu() {
-      this.$router.push({ name: "WhatsOnMenu", params: { email: this.userEmail } });
-      console.log("menu done")
+    goToMenu() {
+      this.$router.push({
+        name: "WhatsOnMenu",
+        params: { email: this.userEmail }
+      });
+      console.log("menu done");
     }
   },
   created() {
     this.userEmail = this.$router.history.current.params.email;
-    console.log("ROUTER",this.$router)
+    console.log("ROUTER", this.$router);
     this.getUserFavorites(this.userEmail);
-        this.getAccount(this.userEmail);
-
+    this.getAccount(this.userEmail);
+    this.getMealFavorites(this.userEmail)
   }
 };
 </script>

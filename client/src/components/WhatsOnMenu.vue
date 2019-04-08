@@ -25,7 +25,7 @@
               <div class="field">
                 <div class="control">
                   <b-input
-                  v-model="calorie"
+                    v-model="calorie"
                     id="calories"
                     type="text"
                     required
@@ -72,6 +72,50 @@
         </div>
       </div>
     </div>
+    <div class="section">
+      <div class="columns is-centered" v-if="mealData">
+        <div v-for="(meal, index) in mealData" :key="index" class="column is-fullwidth">
+            <section class="boxes">
+    <div class="box">
+      <div class="media-content">
+        <p class="title is-4">{{meal.mealName}}</p>
+              <img src="../assets/fav-menu.jpg" alt="food">
+
+      </div>
+
+      <div class="has-text-left">
+        <div>
+          <strong>First Item:</strong>
+                <p class="subtitle is-6">{{meal.foodItem1}}</p>
+        </div>
+        <div>
+          <strong>Second Item:</strong>
+                <p class="subtitle is-6">{{meal.foodItem2}}</p>
+        </div>
+        <div>
+          <strong>Third Item:</strong>
+                <p class="subtitle is-6">{{meal.foodItem3}}</p>
+        </div>
+        <div>
+          <strong>Period:</strong>
+                <p class="subtitle is-6">{{meal.mealPeriod}}</p>
+        </div>
+         
+      <div class="field-body">
+        <div style="padding:5px" class="field">
+          <button
+            class="button is-primary is-pulled-right"
+            @click="addMeal(meal)"
+          >Add Favourite</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+         
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <style>
@@ -95,12 +139,15 @@ export default {
   },
   data() {
     return {
+            userEmail: this.$router.history.current.params.email,
+
       data: "",
       isDairyFree: false,
       isNutFree: false,
       filtersData: [],
       itemsData: [],
       initialData: [],
+      mealData: [],
       search: "",
       calorie: ""
     };
@@ -114,6 +161,18 @@ export default {
           this.itemsData = res.data.items;
           this.initialData = res.data.items;
           console.log(this.itemsData);
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    },
+    getMeals() {
+      const path = "http://localhost:5000/meal";
+      axios
+        .get(path)
+        .then(res => {
+          this.mealData = res.data.meals;
         })
         .catch(error => {
           // eslint-disable-next-line
@@ -141,26 +200,44 @@ export default {
       console.log(this.itemsData);
     },
     searchitems: function() {
-      const array=[]
+      const array = [];
       return this.itemsData.filter(item => {
-        if(this.search){
-        return item.itemName.toLowerCase().includes(this.search.toLowerCase());
-        }else if(this.calorie){
-          return item.itemCalories<=this.calorie;
-        }
-        else
-         return this.itemsData;
+        if (this.search) {
+          return item.itemName
+            .toLowerCase()
+            .includes(this.search.toLowerCase());
+        } else if (this.calorie) {
+          return item.itemCalories <= this.calorie;
+        } else return this.itemsData;
       });
     },
     searchcalorie: function() {
       return this.itemsData.filter(item => {
-        const cal= item.itemCalorie.includes(this.calorie);
-        console.log(cal)
+        const cal = item.itemCalorie.includes(this.calorie);
+        console.log(cal);
       });
-    }
+    },
+     addMeal(meal) {
+      const userEmail=this.userEmail;
+      axios({
+        method: "post",
+        url: `http://localhost:5000/user/${userEmail}/favouritemeal`,
+        data: {
+          userEmail: userEmail,
+          favouriteMeal: meal.mealId,
+        }
+      })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
   },
   created() {
     this.getItems();
+    this.getMeals();
   }
 };
 </script>
