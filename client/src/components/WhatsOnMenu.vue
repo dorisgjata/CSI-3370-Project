@@ -75,44 +75,42 @@
     <div class="section">
       <div class="columns is-centered" v-if="mealData">
         <div v-for="(meal, index) in mealData" :key="index" class="column is-fullwidth">
-            <section class="boxes">
-    <div class="box">
-      <div class="media-content">
-        <p class="title is-4">{{meal.mealName}}</p>
-              <img src="../assets/fav-menu.jpg" alt="food">
+          <section class="boxes">
+            <div class="box">
+              <div class="media-content">
+                <p class="title is-4">{{meal.mealName}}</p>
+                <img src="../assets/fav-menu.jpg" alt="food">
+              </div>
 
-      </div>
+              <div class="has-text-left">
+                <div>
+                  <strong>First Item:</strong>
+                  <p class="subtitle is-6">{{meal.foodItem1}}</p>
+                </div>
+                <div>
+                  <strong>Second Item:</strong>
+                  <p class="subtitle is-6">{{meal.foodItem2}}</p>
+                </div>
+                <div>
+                  <strong>Third Item:</strong>
+                  <p class="subtitle is-6">{{meal.foodItem3}}</p>
+                </div>
+                <div>
+                  <strong>Period:</strong>
+                  <p class="subtitle is-6">{{meal.mealPeriod}}</p>
+                </div>
 
-      <div class="has-text-left">
-        <div>
-          <strong>First Item:</strong>
-                <p class="subtitle is-6">{{meal.foodItem1}}</p>
-        </div>
-        <div>
-          <strong>Second Item:</strong>
-                <p class="subtitle is-6">{{meal.foodItem2}}</p>
-        </div>
-        <div>
-          <strong>Third Item:</strong>
-                <p class="subtitle is-6">{{meal.foodItem3}}</p>
-        </div>
-        <div>
-          <strong>Period:</strong>
-                <p class="subtitle is-6">{{meal.mealPeriod}}</p>
-        </div>
-         
-      <div class="field-body">
-        <div style="padding:5px" class="field">
-          <button
-            class="button is-primary is-pulled-right"
-            @click="addMeal(meal)"
-          >Add Favourite</button>
-        </div>
-      </div>
-    </div>
-    </div>
-  </section>
-         
+                <div class="field-body">
+                  <div style="padding:5px" class="field">
+                    <button
+                      class="button is-primary is-pulled-right"
+                      @click="addMeal(meal)"
+                    >Add Favourite</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -139,7 +137,7 @@ export default {
   },
   data() {
     return {
-            userEmail: this.$router.history.current.params.email,
+      userEmail: this.$router.history.current.params.email,
 
       data: "",
       isDairyFree: false,
@@ -217,14 +215,14 @@ export default {
         console.log(cal);
       });
     },
-     addMeal(meal) {
-      const userEmail=this.userEmail;
+    addMeal(meal) {
+      const userEmail = this.userEmail;
       axios({
         method: "post",
         url: `http://localhost:5000/user/${userEmail}/favouritemeal`,
         data: {
           userEmail: userEmail,
-          favouriteMeal: meal.mealId,
+          favouriteMeal: meal.mealId
         }
       })
         .then(function(response) {
@@ -233,7 +231,7 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-    },
+    }
   },
   created() {
     this.getItems();

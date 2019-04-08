@@ -39,31 +39,63 @@
             </footer>
           </div>
         </div>
-
-        <div class="column is-one-third">
-          <p class="title is-5">Favorite Items</p>
-          <div v-if="!favorites">
-            <div class="card">
-              <div class="card-content">
-                <div class="media-content">
-                  <p class="subtitle is-6">No Favorite Items Selected</p>
+        <div class="column centered">
+          <div class="column">
+            <p class="title is-5">Favorite Items</p>
+            <div v-if="!favorites">
+              <div class="card">
+                <div class="card-content">
+                  <div class="media-content">
+                    <p class="subtitle is-6">No Favorite Items Selected</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TODO -->
+            <div v-if="favorites">
+              <div v-for="(fav, index) in favorites" :key="index">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="media">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <img src="../assets/fav-menu.jpg" alt="food">
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-6">{{fav.itemName}}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- TODO -->
-          <div v-if="favorites">
-            <div v-for="(fav, index) in favorites" :key="index">
+          <div class="column">
+            <p class="title is-5">Favorite Meals</p>
+            <div v-if="!favoriteMeals">
               <div class="card">
                 <div class="card-content">
-                  <div class="media">
-                    <div class="media-left">
-                      <figure class="image is-48x48">
-                        <img src="../assets/fav-menu.jpg" alt="food">
-                      </figure>
-                    </div>
-                    <div class="media-content">
-                      <p class="title is-6">{{fav.itemName}}</p>
+                  <div class="media-content">
+                    <p class="subtitle is-6">No Favorite Meals Selected</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TODO -->
+            <div v-if="favoriteMeals">
+              <div v-for="(fav, index) in favoriteMeals" :key="index">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="media">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <img src="../assets/fav-menu.jpg" alt="food">
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-6">{{fav.mealName}}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -71,40 +103,60 @@
             </div>
           </div>
         </div>
+                 <div class="column">
 
-        <div class="column is-one-third">
-          <p class="title is-5">Favorite Meals</p>
-          <div v-if="!favoriteMeals">
-            <div class="card">
-              <div class="card-content">
-                <div class="media-content">
-                  <p class="subtitle is-6">No Favorite Meals Selected</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- TODO -->
-          <div v-if="favoriteMeals">
-            <div v-for="(fav, index) in favoriteMeals" :key="index">
-              <div class="card">
-                <div class="card-content">
-                  <div class="media">
-                    <div class="media-left">
-                      <figure class="image is-48x48">
-                        <img src="../assets/fav-menu.jpg" alt="food">
-                      </figure>
-                    </div>
-                    <div class="media-content">
-                      <p class="title is-6">{{fav.mealName}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+         <div class="column">
+      <p class="title is-5">Recommended Meal</p>
+      <div v-if="!favoriteMeals">
+        <div class="card">
+          <div class="card-content">
+            <div class="media-content">
+              <p class="subtitle is-6">You have to presave meals to get recommendations</p>
             </div>
           </div>
         </div>
       </div>
+      <!-- TODO -->
+      <div v-if="favoriteMeals && mealData">
+        <div v-for="(meal, index) in mealData" :key="index">
+          <div class="card">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img src="../assets/fav-menu.jpg" alt="food">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="has-text-left">
+                    <div>
+                      <strong>First Item:</strong>
+                      <p class="subtitle is-6">{{meal.foodItem1}}</p>
+                    </div>
+                    <div>
+                      <strong>Second Item:</strong>
+                      <p class="subtitle is-6">{{meal.foodItem2}}</p>
+                    </div>
+                    <div>
+                      <strong>Third Item:</strong>
+                      <p class="subtitle is-6">{{meal.foodItem3}}</p>
+                    </div>
+                    <div>
+                      <strong>Period:</strong>
+                      <p class="subtitle is-6">{{meal.mealPeriod}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
     </div>
+      </div>
+    </div>
+   
   </div>
 </template>
 
@@ -117,7 +169,8 @@ export default {
     return {
       account: null,
       favorites: null,
-      favoriteMeals: null
+      favoriteMeals: null,
+      mealData: null
     };
   },
   methods: {
@@ -138,6 +191,18 @@ export default {
           // console.log(this.account.userPreferences);
         })
         .catch(error => console.error("Error:", error));
+    },
+    getMeals() {
+      const path = "http://localhost:5000/meal";
+      axios
+        .get(path)
+        .then(res => {
+          this.mealData = res.data.meals;
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     getUserFavorites(userEmail) {
       axios
@@ -176,7 +241,8 @@ export default {
     console.log("ROUTER", this.$router);
     this.getUserFavorites(this.userEmail);
     this.getAccount(this.userEmail);
-    this.getMealFavorites(this.userEmail)
+    this.getMealFavorites(this.userEmail);
+    this.getMeals();
   }
 };
 </script>
