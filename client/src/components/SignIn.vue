@@ -2,7 +2,7 @@
   <div class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item" href="/">Home</a>
-      <a class="navbar-item"  v-if="isSignIn" @click="goToMenu(user)">Menu</a>
+      <a class="navbar-item" @click="goToMenu(user)" v-if="isSignIn">Menu</a>
       <a class="navbar-item">About</a>
       <a class="navbar-item" href="/contact">Contact</a>
     </div>
@@ -178,10 +178,11 @@ export default {
         });
     },
     goToAccount(userEmail) {
-      this.$router.push({ name: "account", params: { email: this.userEmail } });
+      this.$router.push({ name: "Account", params: { email: this.userEmail } });
     },
     goToMenu(userEmail) {
-      this.$router.push({ name: "menu", params: { email: this.userEmail } });
+      this.$router.push({ name: "WhatsOnMenu", params: { email: this.userEmail } });
+      console.log("menu done")
     }
   },
   mounted() {

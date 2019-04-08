@@ -14,7 +14,7 @@ export default new Router({
   routes: [
       {
         path: '/account/:email',
-        name: 'account',
+        name: 'Account',
         component: Account,
       },
     {
