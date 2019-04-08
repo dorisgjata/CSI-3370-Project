@@ -2,7 +2,6 @@
   <div class="container">
     <div v-if="account">
       <div v-if="account.userFavorites">{{account.userFavorites}}</div>
-      <div v-if="account.userPreferences">{{account.userPreferences}}</div>
       <div class="columns centered">
         <div class="column is-one-third">
           <p class="title is-5">Profile</p>
@@ -26,23 +25,20 @@
               </div>
             </div>
             <footer class="card-footer">
-              <router-link to="/">
-                <a v-if="!account.userPreferences" class="card-footer-item">Add Preferences</a>
-              </router-link>
-              <router-link to="/items">
-                <a v-if="!account.userFavourites" class="card-footer-item">Add Favorites</a>
-              </router-link>
+                <a v-if="!account.userPreferences"  @click="goToMenu()" class="card-footer-item">Add Favorite Meals</a>
+
+                <a v-if="!account.userFavourites"  @click="goToMenu()" class="card-footer-item">Add Favorite Items</a>
             </footer>
           </div>
         </div>
 
         <div class="column is-one-third">
-          <p class="title is-5">Favorites</p>
+          <p class="title is-5">Favorite Items</p>
           <div v-if="!favorites">
             <div class="card">
               <div class="card-content">
                 <div class="media-content">
-                  <p class="subtitle is-6">No Favorites Selected</p>
+                  <p class="subtitle is-6">No Favorite Items Selected</p>
                 </div>
               </div>
             </div>
@@ -67,20 +63,21 @@
             </div>
           </div>
         </div>
-        <div class="column is-one-third">
-          <p class="title is-5">Preferences</p>
-          <div v-if="!account.userPreferences">
+
+             <div class="column is-one-third">
+          <p class="title is-5">Favorite Meals</p>
+          <div v-if="!favoriteMeals">
             <div class="card">
               <div class="card-content">
                 <div class="media-content">
-                  <p class="subtitle is-6">No Preferences Selected</p>
+                  <p class="subtitle is-6">No Favorite Meals Selected</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- TODO -->
-          <div v-if="account.userPreferences">
-            <div v-for="(pref, index) in account.userPreferences" :key="index">
+          <div v-if="favoriteMeals">
+            <div v-for="(fav, index) in favoriteMeals" :key="index">
               <div class="card">
                 <div class="card-content">
                   <div class="media">
@@ -90,9 +87,7 @@
                       </figure>
                     </div>
                     <div class="media-content">
-                      <p class="title is-6">{{pref.preferenceNutrients}}</p>
-                      <p class="title is-6">{{pref.preferenceFilters}}</p>
-                      <p class="title is-6">{{pref.preferenceCalories}}</p>
+                      <p class="title is-6">{{fav.mealName}}</p>
                     </div>
                   </div>
                 </div>
@@ -100,7 +95,7 @@
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </div>
   </div>
 </template>
@@ -114,6 +109,7 @@ export default {
     return {
       account: null,
       favorites:null,
+      favoriteMeals:null,
 
     };
   },
@@ -147,6 +143,22 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
+    },
+      getMealFavorites(userEmail) {
+      axios
+        .get(`http://localhost:5000/user/${userEmail}/favouritemeal`)
+        .then(res => {
+          console.log(res.data.favorites);
+          this.favorites= res.data.favoriteMeals;
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    },
+      goToMenu() {
+      this.$router.push({ name: "WhatsOnMenu", params: { email: this.userEmail } });
+      console.log("menu done")
     }
   },
   created() {
