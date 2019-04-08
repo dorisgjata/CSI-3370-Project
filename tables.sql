@@ -97,13 +97,13 @@ CREATE TABLE favourites(
     ON UPDATE CASCADE ON DELETE CASCADE,
     favouriteItem INT REFERENCES items(itemId) 
     ON UPDATE CASCADE ON DELETE CASCADE,
-    userId text REFERENCES users(userEmail) 
+    userEmail text REFERENCES users(userEmail) 
     ON UPDATE CASCADE ON DELETE CASCADE
     );
 
 CREATE TABLE favouriteItems(
     id SERIAL PRIMARY KEY,
-    userId TEXT REFERENCES users(userEmail) 
+    userEmail TEXT REFERENCES users(userEmail) 
     ON UPDATE CASCADE ON DELETE CASCADE,
     favouriteItem INT REFERENCES items(itemId) 
     ON UPDATE CASCADE ON DELETE CASCADE

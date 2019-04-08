@@ -3,28 +3,30 @@
     <section>
       <b-tabs>
         <b-tab-item label="Select Items">
-          <b-table :data="itemsData" :checked-rows.sync="checkedRows" checkable>
-            <template slot-scope="props">
-              <b-table-column
-                field="itemId"
-                label="Item Id"
-                width="40"
-                numeric
-              >{{ props.row.itemId }}</b-table-column>
-              <b-table-column
-                field="itemName"
-                label="Name"
-                width="40"
-                numeric
-              >{{ props.row.itemName }}</b-table-column>
-              <b-table-column
-                field="itemFilters"
-                label="Filter"
-                width="40"
-                numeric
-              >{{ props.row.itemFilters}}</b-table-column>
-            </template>
-          </b-table>
+          <div class="column">
+            <b-table :data="itemsData" :checked-rows.sync="checkedRows" checkable>
+              <template slot-scope="props">
+                <b-table-column
+                  field="itemId"
+                  label="Item Id"
+                  width="40"
+                  numeric
+                >{{ props.row.itemId }}</b-table-column>
+                <b-table-column
+                  field="itemName"
+                  label="Name"
+                  width="40"
+                  numeric
+                >{{ props.row.itemName }}</b-table-column>
+                <b-table-column
+                  field="itemFilters"
+                  label="Filter"
+                  width="40"
+                  numeric
+                >{{ props.row.itemFilters}}</b-table-column>
+              </template>
+            </b-table>
+          </div>
         </b-tab-item>
 
         <b-tab-item :disabled="checkedRows.length!==3" label="Add Meal">
@@ -125,6 +127,30 @@
             </div>
           </div>
         </b-tab-item>
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <div class="title is-4">Current Meals</div>
+              <b-table :data="mealData" class="is-fullwidth">
+                <template slot-scope="props">
+                  <b-table-column field="mealId" label="Meal Id">{{ props.row.mealId }}</b-table-column>
+                  <b-table-column field="mealName" label="Name">{{ props.row.mealName }}</b-table-column>
+                  <b-table-column field="foodItem1" label="Item1">{{ props.row.foodItem1}}</b-table-column>
+                  <b-table-column field="foodItem2" label="Item2">{{ props.row.foodItem2}}</b-table-column>
+                  <b-table-column field="foodItem3" label="Item3">{{ props.row.foodItem3 }}</b-table-column>
+                  <b-table-column field="mealPeriod" label="Period">{{ props.row.mealPeriod }}</b-table-column>
+                  <b-table-column field="mealPeriod" label="Delete">
+                    <button
+                      type="button"
+                      class="button"
+                      @click="deleteMeal(props.row.mealId)"
+                    >Delete</button>
+                  </b-table-column>
+                </template>
+              </b-table>
+            </div>
+          </div>
+        </div>
       </b-tabs>
     </section>
   </div>
@@ -202,7 +228,7 @@ export default {
           mealName: payload.mealName
         }
       })
-        .then(function(response) {
+        .then(() =>  {
           console.log(payload);
           this.success();
         })
@@ -210,6 +236,15 @@ export default {
           console.log(error);
         });
       this.initForm();
+    },
+    deleteMeal(id) {
+      const path = `http://localhost:5000/meal/${id}`;
+      axios
+        .delete(path)
+        .then(() => {
+        })
+        .catch(error => {
+        });
     },
     initForm() {
       this.addMealForm.mealId = "";

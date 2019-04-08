@@ -87,14 +87,14 @@ def filters():
     else: 
         print("IDK")    
     return jsonify(response_object)
-    
+ITEMS=[]   
 @app.route('/items', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def items():
     response_object={'status': 'success'}
     if request.method=='GET':
         conn = db.get_db()
-        sql="SELECT items.itemId, items.itemName, items.itemPortion, items.itemIngridents, items.itemNutrients, filters.filtername from filters inner join items on filters.filterid =  items.itemfilters"
+        sql="SELECT items.itemId, items.itemName, items.itemPortion, items.itemIngridents, items.itemNutrients, items.itemCalories, filters.filtername from filters inner join items on filters.filterid =  items.itemfilters"
         cur=conn.cursor()
         cur.execute(sql)
         items=cur.fetchall()
@@ -107,8 +107,10 @@ def items():
                 "itemPortion": item[2],
                 "itemIngridents": item[3],
                 "itemNutrients": item[4],
-                "itemFilters": item[5],
+                "itemCalories": item[5],
+                "itemFilters": item[6],
             }
+            ITEMS.append(item)
             it.append(item)
         conn.commit()
         cur.close()
@@ -120,21 +122,29 @@ def items():
         itemName= post_data.get('itemName')
         itemPortion=post_data.get('itemPortion')
         itemIngridents=post_data.get('itemIngridents')
+        itemCalories=post_data.get('itemCalories')
         itemNutrients= post_data.get('itemNutrients')
         itemFilters=post_data.get('filterId')       
         conn = db.get_db()
         '''insert into items ( itemid, itemname, itemPortion, itemIngridents, itemNutrients , itemfilters) values (%s, %s, %s, %s, %s,(select filterid from filters where filterid=%s));
 insert into items ( itemid, itemname, itemfilters) values (4, 's', (select filterid from filters where filterid=1));
 '''
-        sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO items( itemId, itemName, itemPortion, itemIngridents, itemNutrients, itemCalories, itemFilters) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         cur=conn.cursor()
-        val=(itemId, itemName, itemPortion, itemIngridents, itemNutrients , itemFilters)
+        val=(itemId, itemName, itemPortion, itemIngridents, itemNutrients, itemCalories, itemFilters)
         cur.execute(sql, val)
         conn.commit()
         cur.close()
         conn.close()
     return jsonify(response_object)
-
+@app.route('/calories', methods=['GET','POST'])
+@cross_origin(origin='*')
+def calCount(ITEMS):
+    temp = ITEMS[0]
+    for items in ITEMS:
+            if (item) < (temp[calLoc]):
+                temp = (ITEMS[x])
+    return temp 
 @app.route('/menu', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def menu():
@@ -396,7 +406,7 @@ def meal():
 
 @app.route('/user/<string:userEmail>/favourites', methods=['GET','POST'])
 @cross_origin(origin='*')  
-def favourites(userEmail):
+def favourite_item(userEmail):
     response_object={'status': 'success'}    
     FILT=[]
     if request.method=='GET':
@@ -423,12 +433,10 @@ def favourites(userEmail):
         print(post_data)
         useremail= post_data.get('userEmail')
         favouriteItem=post_data.get('favouriteItem')
-        favouriteMeal=post_data.get('favouriteMeal')
-        favouriteRecommendation=post_data.get('favouriteRecommendation')
         conn = db.get_db()
-        sql = "INSERT INTO favourites( useremail, favouriteItem, favouriteMeal,favouriteRecommendation) VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO favourites( useremail, favouriteItem) VALUES (%s, %s)"
         cur=conn.cursor()
-        val=( useremail, favouriteItem, favouriteMeal,favouriteRecommendation )
+        val=( useremail, favouriteItem )
         cur.execute(sql, val)
         conn.commit()
         cur.close()
@@ -436,6 +444,126 @@ def favourites(userEmail):
     else: 
         print("IDK")    
     return jsonify(response_object)
+@app.route('/user/<string:userEmail>/favouritemeal', methods=['GET','POST'])
+@cross_origin(origin='*')  
+def favourite_meal(userEmail):
+    response_object={'status': 'success'}    
+    FILT=[]
+    if request.method=='GET':
+        conn = db.get_db()
+        userEmail = request.args.get('userEmail')
+        sql = "SELECT favouritemeals.favouriteMeal, meal.mealName from favouritemeals INNER JOIN meal on favouritemeals.favouritemeal = meal.mealid where favouritemeals.useremail = userEmail"
+       # sql = " SELECT coalesce( (select (favouriteMeal, favouriteItem) from favourites where favourites.useremail=''))"
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,))
+        favs=cur.fetchall()
+        favor=[]
+        for fav in favs:
+            fa={
+                "favouriteMeal": fav[0],
+                "mealName": fav[1],
+            }
+            favor.append(fa)
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object.update({'favoritemeals': favor})
+    elif request.method=='POST':
+        post_data=request.get_json()
+        print(post_data)
+        useremail= post_data.get('userEmail')
+        favouriteMeal=post_data.get('favouriteMeal')
+        conn = db.get_db()
+        sql = "INSERT INTO favouriteMeals( useremail, favouriteMeal) VALUES (%s, %s)"
+        cur=conn.cursor()
+        val=( useremail, favouriteMeal )
+        cur.execute(sql, val)
+        conn.commit()
+        cur.close()
+        conn.close()
+    else: 
+        print("IDK")    
+    return jsonify(response_object) 
+
+@app.route('/user/<string:userEmail>/favouritemeal/<favouriteMeal>', methods=['GET','POST', 'DELETE'])
+@cross_origin(origin='*')  
+def del_favourite_meal(userEmail,favouriteMeal):  
+    response_object={'status': 'success'}    
+    if request.method=='DELETE':
+        #post_data=request.get_json()
+        conn = db.get_db()
+        sql = 'DELETE FROM favouritemeals WHERE userEmail = (%s) AND favouriteMeal =(%s) '
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,favouriteMeal))
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object['message']="DELETED"
+        return jsonify(response_object) 
+
+@app.route('/user/<string:userEmail>/favourites/<favouriteItem>', methods=['GET','POST', 'DELETE'])
+@cross_origin(origin='*')  
+def del_favourite_item(userEmail,favouriteItem):  
+    response_object={'status': 'success'}    
+    if request.method=='DELETE':
+        #post_data=request.get_json()
+        conn = db.get_db()
+        sql = 'DELETE FROM favourites WHERE userEmail = (%s) AND favouriteItem =(%s) '
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,favouriteItem))
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object['message']="DELETED"
+        return jsonify(response_object) 
+
+@app.route('/favmeals/', methods=['GET','POST'])
+@cross_origin(origin='*')  
+def max_meals():
+    response_object={'status': 'success'}    
+    if request.method=='GET':
+        conn = db.get_db()
+        sql="select mealname, mealid from meal where mealid = (SELECT MAX(favouritemeal) fROM favouritemeals)"
+        cur=conn.cursor()
+        cur.execute(sql)
+        maxc=cur.fetchall()
+        meal=[]
+        for fav in maxc:
+            fa={
+                "mealname": fav[0],
+                "mealid": fav[1],
+            }
+            meal.append(fa)
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object.update({'favoritemeals': meal})
+        return jsonify(response_object)    
+@app.route('/favitems/', methods=['GET','POST'])
+@cross_origin(origin='*')  
+def max_items():
+    response_object={'status': 'success'}    
+    if request.method=='GET':
+        conn = db.get_db()
+        sql="select itemname, itemid from items where itemid = (SELECT MAX(favouriteitem) fROM favourites)"
+        cur=conn.cursor()
+        cur.execute(sql)
+        maxc=cur.fetchall()
+        meal=[]
+        for fav in maxc:
+            fa={
+                "itemname": fav[0],
+                "itemid": fav[1],
+            }
+            meal.append(fa)
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object.update({'favoriteitems': meal})
+        return jsonify(response_object)    
+
+
+
 #DELETE AND UPDATE FUNCT
 @app.route('/filters/<filterId>', methods=['GET','POST','DELETE'])
 @cross_origin(origin='*')  
@@ -465,7 +593,7 @@ def single_filter(filterId):
         conn.close()
     return jsonify(response_object)
 
-@app.route('/items/<itemId>', methods=['PUT','DELETE'])
+@app.route('/items/<itemId>', methods=['GET','POST','DELETE'])
 @cross_origin(origin='*')  
 def single_item(itemId):
     response_object={'status': 'success'}    
@@ -474,30 +602,47 @@ def single_item(itemId):
         conn = db.get_db()
         sql = 'DELETE FROM items WHERE itemId = (%s)'
         cur=conn.cursor()
-        cur.executemany(sql,[(itemId)])
+        cur.execute(sql,(itemId))
         conn.commit()
         cur.close()
         conn.close()
-    elif request.method=='PUT':
+    elif request.method=='POST':
         post_data=request.get_json()
         post_data=request.get_json()
         itemId= post_data.get('itemId')
         itemName= post_data.get('itemName')
         itemPortion= post_data.get('itemPortion')
+        itemCalories= post_data.get('itemCalories')
         itemIngridents= post_data.get('itemIngridents')
         itemNutrients= post_data.get('itemNutrients')
         itemFilters= post_data.get('itemFilters')
         conn = db.get_db()
         #TODO: FULL UPDATE
-        sql = 'UPDATE items SET items.itemName = (%s) WHERE item.itemId = (%s) '
+        sql = 'UPDATE items SET itemName = (%s), itemPortion = (%s),  itemCalories = (%s), itemIngridents = (%s), itemNutrients = (%s) WHERE items.itemId = (%s)'
         cur=conn.cursor()
-        cur.executemany(sql,[(filterNAME,itemId)])
+        val=(itemName, itemPortion, itemCalories, itemIngridents, itemNutrients,itemId)
+        cur.execute(sql,val)
         conn.commit()
         cur.close()
         conn.close()
     return jsonify(response_object)
+@app.route('/meal/<mealId>', methods=['GET','POST','DELETE'])
+@cross_origin(origin='*')  
+def del_meal(mealId):
+     response_object={'status': 'success'}    
+     if request.method=='DELETE':
+        #post_data=request.get_json()
+        conn = db.get_db()
+        sql = 'DELETE FROM meal WHERE mealid = (%s)'
+        cur=conn.cursor()
+        cur.execute(sql,(mealId))
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object['message']="DELETED"
+        return jsonify(response_object)  
 
-@app.route('/menu/<menuId>', methods=['PUT','DELETE'])
+@app.route('/menu/<menuId>', methods=['POST','DELETE'])
 @cross_origin(origin='*')  
 def single_menu(menuId):
     response_object={'status': 'success'}    
@@ -510,7 +655,7 @@ def single_menu(menuId):
         conn.commit()
         cur.close()
         conn.close()
-    elif request.method=='PUT':
+    elif request.method=='POST':
         post_data=request.get_json()
         menuId= post_data.get('menuId')
         menuDatw= post_data.get('menuDate')
@@ -531,7 +676,7 @@ def single_menu(menuId):
         conn.close()
     return jsonify(response_object)
 
-@app.route('/categorys/<categoryId>', methods=['GET','PUT','DELETE'])
+@app.route('/categorys/<categoryId>', methods=['GET','POST','DELETE'])
 @cross_origin(origin='*')  
 def single_category(categoryId):
     response_object={'status': 'success'}    
@@ -545,7 +690,7 @@ def single_category(categoryId):
         cur.close()
         conn.close()
         response_object['message']="DELETED"
-    elif request.method=='PUT':
+    elif request.method=='POST':
         post_data=request.get_json()
         categoryId= post_data.get('categoryId'),
         categoryName=post_data.get('categoryName')

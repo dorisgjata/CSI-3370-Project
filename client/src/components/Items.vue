@@ -195,7 +195,7 @@
         <div class="card-content">
           <form class="w-100" ref="editItemModal" id="edit-modal" title="Edit Item" hide-footer>
             <section>
-              <b-field id="form--edit-id-group" label="Filter Id:" label-for="form-edit-id-input">
+              <b-field id="form--edit-id-group" label="Item Id:" label-for="form-edit-id-input">
                 <b-input
                   disabled
                   id="form-edit-id-input"
@@ -203,6 +203,16 @@
                   v-model="editItemForm.itemId"
                   required
                   placeholder="Enter Id"
+                ></b-input>
+              </b-field>
+                 <b-field id="form--edit-id-group" label="Filter Id:" label-for="form-edit-id-filter">
+                <b-input
+                  disabled
+                  id="form-edit-id-filter"
+                  type="int"
+                  v-model="editItemForm.itemFilters"
+                  required
+                  placeholder="Item Filter Id"
                 ></b-input>
               </b-field>
               <b-field
@@ -286,7 +296,7 @@ export default {
         itemitemCalories: ""
       },
       editItemForm: {
-        filterId: "",
+        itemFilters: "",
         itemId: "",
         itemName: "",
         itemPortion: "",
@@ -388,6 +398,7 @@ export default {
         itemPortion: this.editItemForm.itemPortion,
         itemIngridents: this.editItemForm.itemIngridents,
         itemNutrients: this.editItemForm.itemNutrients,
+        itemFilters: this.editItemForm.itemFilters,
         itemCalories: this.editItemForm.itemCalories
       };
       this.updateItem(payload, this.editItemForm.itemId);
@@ -409,7 +420,9 @@ export default {
       const path = `http://localhost:5000/items/${itemId}`;
       axios
         .post(path, payload)
-        .then(() => {})
+        .then(() => {
+          console.log(payload)
+        })
         .catch(error => {
           // eslint-disable-next-line
           console.log(error);
