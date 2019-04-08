@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import SignIn from './components/SignIn'
 import Footer from './components/Footer'
+import LandingPage from '@/components/LandingPage';
 
 import router from './router'
 import Buefy from "buefy"
@@ -37,3 +38,9 @@ new Vue({
   components: { Footer },
   template: '<Footer/>',
 });
+/* new Vue({
+  el: '#landing',
+  router,
+  components: { LandingPage },
+  template: '<LandingPage/>',
+}); */
