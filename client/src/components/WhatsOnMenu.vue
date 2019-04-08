@@ -33,7 +33,7 @@
                 <button
                   v-bind:class="{ 'is-primary': isDairyFree }"
                   class="button is-rounded"
-                  @click="isDairyFree=!isDairyFree,dairyFree()"
+                  @click="isDairyFree=!isDairyFree,updateFiler()"
                 >
                   <span>Dairy Free</span>
                 </button>
@@ -41,7 +41,7 @@
                 <button
                   v-bind:class="{ 'is-primary': isNutFree }"
                   class="button is-rounded"
-                  @click="isNutFree=!isNutFree,dairyFree()"
+                  @click="isNutFree=!isNutFree,updateFiler()"
                 >
                   <span>Nuts Free</span>
                 </button>
@@ -115,60 +115,24 @@ export default {
       const nut = this.initialData;
       const norm = this.initialData;
       if (this.isDairyFree && !this.isNutFree) {
-        console.log("before", this.itemsData);
         this.itemsData = dairy.filter(
           item => item.itemFilters !== "Contains Dairy"
         );
-        console.log("after", this.itemsData);
       } else if (this.isNutFree && !this.isDairyFree) {
-        console.log("before", this.itemsData);
         this.itemsData = nut.filter(
           item => item.itemFilters !== "Contains Nuts"
         );
-        console.log("after", this.itemsData);
       } else if (this.isNutFree && this.isDairyFree) {
-        console.log("before", this.itemsData);
         this.itemsData = norm.filter(item => item.itemFilters === "Normal");
-        console.log("after", this.itemsData);
       } else {
-        console.log("idk", this.initialData);
         this.itemsData = this.initialData;
       }
       console.log(this.itemsData);
-    },
-    nutFree() {
-      const array = this.itemsData;
-      const nutfree = [];
-      array.forEach(item => {
-        if (item.itemFilters !== "Contains nuts") {
-          nutfree.push(item);
-        }
-      });
-      this.itemsData = nutfree;
-    },
-    normal() {
-      const array = this.itemsData;
-      const normal = [];
-      array.forEach(item => {
-        if (item.itemFilters === "Normal") {
-          normal.push(item);
-        }
-      });
-      this.itemsData = this.initialData;
     },
     searchitems: function() {
       return this.itemsData.filter(item => {
         return item.itemName.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
-  },
-  updated() {
-    console.log("dairy", this.isDairyFree);
-    console.log("nuts", this.isNutFree);
-    if (this.isDairyFree && !this.isNutFree) {
-    }
-    if (this.isNutFree && !this.isDairyFree) {
-    } else if (this.isNutFree && this.isDairyFree) {
     }
   },
   created() {
