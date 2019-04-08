@@ -87,7 +87,7 @@ def filters():
     else: 
         print("IDK")    
     return jsonify(response_object)
-    
+ITEMS=[]   
 @app.route('/items', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def items():
@@ -110,6 +110,7 @@ def items():
                 "itemCalories": item[5],
                 "itemFilters": item[6],
             }
+            ITEMS.append(item)
             it.append(item)
         conn.commit()
         cur.close()
@@ -136,7 +137,14 @@ insert into items ( itemid, itemname, itemfilters) values (4, 's', (select filte
         cur.close()
         conn.close()
     return jsonify(response_object)
-
+@app.route('/calories', methods=['GET','POST'])
+@cross_origin(origin='*')
+def calCount(ITEMS):
+    temp = ITEMS[0]
+    for items in ITEMS:
+            if (item) < (temp[calLoc]):
+                temp = (ITEMS[x])
+    return temp 
 @app.route('/menu', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def menu():
