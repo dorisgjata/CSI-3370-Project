@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item" href="/">Home</a>
+      <a class="navbar-item" href="/home">Home</a>
       <a class="navbar-item" @click="goToMenu(user)" v-if="isSignIn">Menu</a>
       <a class="navbar-item">About</a>
       <a class="navbar-item" href="/contact">Contact</a>

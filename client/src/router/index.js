@@ -5,6 +5,7 @@ import Menu from '@/components/Menu';
 import Account from '@/components/Account';
 import Steps from '@/components/Steps';
 import Contact from '@/components/Contact';
+import LandingPage from '@/components/LandingPage';
 
 
 
@@ -21,6 +22,11 @@ export default new Router({
       path: '/parsedmenu',
       name: 'Menu',
       component: Menu,
+    },
+    {
+      path: '/home',
+      name: 'LandingPage',
+      component: LandingPage,
     },
     {
       path: '/menu/:email',
