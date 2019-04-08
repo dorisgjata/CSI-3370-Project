@@ -61,8 +61,11 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="columns is-centered" v-if="itemsData">
+    <div class="section has-background-white-bis" v-if="itemsData">
+              <p class="title is-5 has-text-left">Items</p>
+
+      <div class="columns is-centered is-multiline" >
+
         <div v-for="(item, index) in this.searchitems()" :key="index" class="column is-one-third">
           <!--  <div v-if="(isDairyFree && !isNutFree &&  item.itemFilters!=='Contains Dairy')"> <ItemsView v-bind:item="item"/></div>
           <div v-if="(isNutFree && !isDairyFree && item.itemFilters!=='Contains Nuts')"> <ItemsView v-bind:item="item"/></div>
@@ -72,9 +75,12 @@
         </div>
       </div>
     </div>
-    <div class="section">
-      <div class="columns is-centered" v-if="mealData">
-        <div v-for="(meal, index) in mealData" :key="index" class="column is-fullwidth">
+    <div class="section has-background-white-bis">
+              <p class="title is-5 has-text-left">Meals</p>
+
+      <div class="columns is-centered is-multiline" v-if="mealData">
+
+        <div v-for="(meal, index) in mealData" :key="index" class="column is-one-third">
           <section class="boxes">
             <div class="box">
               <div class="media-content">
