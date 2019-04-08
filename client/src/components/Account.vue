@@ -42,7 +42,7 @@
         <div class="column centered">
           <div class="column">
             <p class="title is-5">Favorite Items</p>
-            <div v-if="!favorites">
+            <div v-if="favorites.length===0">
               <div class="card">
                 <div class="card-content">
                   <div class="media-content">
@@ -52,7 +52,7 @@
               </div>
             </div>
             <!-- TODO -->
-            <div v-if="favorites">
+            <div v-if="favorites.length!==0">
               <div v-for="(fav, index) in favorites" :key="index">
                 <div class="card">
                   <div class="card-content">
@@ -65,11 +65,11 @@
                       <div class="media-content">
                         <p class="title is-6">{{fav.itemName}}</p>
                       </div>
-                          <button
-                      type="button"
-                      class="button"
-                      @click=" deleteFavItem(fav.favouriteItem, userEmail) "
-                    >Delete</button>
+                      <button
+                        type="button"
+                        class="button"
+                        @click=" deleteFavItem(fav.favouriteItem, userEmail) "
+                      >Delete</button>
                     </div>
                   </div>
                 </div>
@@ -78,7 +78,7 @@
           </div>
           <div class="column">
             <p class="title is-5">Favorite Meals</p>
-            <div v-if="!favoriteMeals">
+            <div v-if="favoriteMeals.length===0">
               <div class="card">
                 <div class="card-content">
                   <div class="media-content">
@@ -88,7 +88,7 @@
               </div>
             </div>
             <!-- TODO -->
-            <div v-if="favoriteMeals">
+            <div v-if="favoriteMeals.length!==0">
               <div v-for="(fav, index) in favoriteMeals" :key="index">
                 <div class="card">
                   <div class="card-content">
@@ -101,13 +101,12 @@
                       <div class="media-content">
                         <p class="title is-6">{{fav.mealName}}</p>
                       </div>
-                       <button
-                      type="button"
-                      class="button"
-                      @click=" deleteFavMeal(fav.favouriteMeal, userEmail) "
-                    >Delete</button>
+                      <button
+                        type="button"
+                        class="button"
+                        @click=" deleteFavMeal(fav.favouriteMeal, userEmail) "
+                      >Delete</button>
                     </div>
-                   
                   </div>
                 </div>
               </div>
@@ -117,7 +116,7 @@
         <div class="column">
           <div class="column">
             <p class="title is-5">Recommended Meal</p>
-            <div v-if="!favoriteMeals">
+            <div v-if="favoriteMeals.length===0">
               <div class="card">
                 <div class="card-content">
                   <div class="media-content">
@@ -126,7 +125,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="favoriteMeals && mealData">
+            <div v-if="favoriteMeals.length!==0 && mealData.length!==0">
               <div v-for="(meal, index) in mealData" :key="index">
                 <div class="card">
                   <div class="card-content">
@@ -176,10 +175,10 @@ export default {
   data() {
     return {
       account: null,
-      favorites: null,
-      favoriteMeals: null,
+      favorites: [],
+      favoriteMeals: [],
       mealData: null,
-      userEmail: "",
+      userEmail: ""
     };
   },
   methods: {
@@ -250,8 +249,11 @@ export default {
         .delete(path)
         .then(() => {
           this.getMealFavorites();
+          this.sucess();
         })
-        .catch(error => {});
+        .catch(error => {
+          this.error();
+        });
     },
     deleteFavItem(favouriteItem, userEmail) {
       const path = `http://localhost:5000/user/${userEmail}/favourites/${favouriteItem}`;
@@ -259,8 +261,23 @@ export default {
         .delete(path)
         .then(() => {
           this.getUserFavorites();
+          this.sucess();
         })
-        .catch(error => {});
+        .catch(error => {
+          this.error();
+        });
+    },
+    sucess() {
+      this.$toast.open({
+        message: "Removed successfully",
+        type: "is-info"
+      });
+    },
+    error() {
+      this.$toast.open({
+        message: "Couldn't remove successfully",
+        type: "is-danger"
+      });
     }
   },
   created() {
