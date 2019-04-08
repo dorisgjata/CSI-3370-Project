@@ -228,7 +228,7 @@ export default {
           mealName: payload.mealName
         }
       })
-        .then(function(response) {
+        .then(() =>  {
           console.log(payload);
           this.success();
         })

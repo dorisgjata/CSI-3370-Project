@@ -62,10 +62,8 @@
     </div>
 
     <div class="section has-background-white-bis" v-if="itemsData">
-              <p class="title is-5 has-text-left">Items</p>
-
-      <div class="columns is-centered is-multiline" >
-
+      <p class="title is-5 has-text-left">Items</p>
+      <div class="columns is-centered is-multiline">
         <div v-for="(item, index) in this.searchitems()" :key="index" class="column is-one-third">
           <!--  <div v-if="(isDairyFree && !isNutFree &&  item.itemFilters!=='Contains Dairy')"> <ItemsView v-bind:item="item"/></div>
           <div v-if="(isNutFree && !isDairyFree && item.itemFilters!=='Contains Nuts')"> <ItemsView v-bind:item="item"/></div>
@@ -76,10 +74,8 @@
       </div>
     </div>
     <div class="section has-background-white-bis">
-              <p class="title is-5 has-text-left">Meals</p>
-
+      <p class="title is-5 has-text-left">Meals</p>
       <div class="columns is-centered is-multiline" v-if="mealData">
-
         <div v-for="(meal, index) in mealData" :key="index" class="column is-one-third">
           <section class="boxes">
             <div class="box">
@@ -87,7 +83,6 @@
                 <p class="title is-4">{{meal.mealName}}</p>
                 <img src="../assets/fav-menu.jpg" alt="food">
               </div>
-
               <div class="has-text-left">
                 <div>
                   <strong>First Item:</strong>
@@ -105,7 +100,6 @@
                   <strong>Period:</strong>
                   <p class="subtitle is-6">{{meal.mealPeriod}}</p>
                 </div>
-
                 <div class="field-body">
                   <div style="padding:5px" class="field">
                     <button
@@ -231,12 +225,25 @@ export default {
           favouriteMeal: meal.mealId
         }
       })
-        .then(function(response) {
-          console.log(response);
+        .then(() => {
+          this.sucess();
         })
-        .catch(function(error) {
+        .catch(error => {
           console.log(error);
+          this.error();
         });
+    },
+    sucess() {
+      this.$toast.open({
+        message: "Added successfully",
+        type: "is-info"
+      });
+    },
+    error() {
+      this.$toast.open({
+        message: "Couldn't add successfully",
+        type: "is-danger"
+      });
     }
   },
   created() {

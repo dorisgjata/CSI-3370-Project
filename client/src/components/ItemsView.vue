@@ -23,17 +23,14 @@
           <strong>Portion:</strong>
           {{item.itemPortion}}
         </div>
-          <div>
+        <div>
           <strong>Calories:</strong>
           {{item.itemCalories}}
         </div>
       </div>
       <div class="field-body">
         <div style="padding:5px" class="field">
-          <button
-            class="button is-primary is-pulled-right"
-            @click="addItem(item)"
-          >Add Favourite</button>
+          <button class="button is-primary is-pulled-right" @click="addItem(item)">Add Favourite</button>
         </div>
       </div>
     </div>
@@ -48,27 +45,40 @@ export default {
   props: ["item"],
   data() {
     return {
-      userEmail: this.$router.history.current.params.email,
+      userEmail: this.$router.history.current.params.email
     };
   },
   methods: {
-      addItem(item) {
-      const userEmail=this.userEmail;
+    addItem(item) {
+      const userEmail = this.userEmail;
       axios({
         method: "post",
         url: `http://localhost:5000/user/${userEmail}/favourites`,
         data: {
           userEmail: userEmail,
-          favouriteItem: item.itemId,
+          favouriteItem: item.itemId
         }
       })
-        .then(function(response) {
-          console.log(response);
+        .then(() => {
+          this.sucess();
         })
-        .catch(function(error) {
+        .catch(error => {
           console.log(error);
+          this.error();
         });
     },
-  },
+    sucess() {
+      this.$toast.open({
+        message: "Added successfully",
+        type: "is-info"
+      });
+    },
+    error() {
+      this.$toast.open({
+        message: "Couldn't add successfully",
+        type: "is-danger"
+      });
+    }
+  }
 };
 </script>
