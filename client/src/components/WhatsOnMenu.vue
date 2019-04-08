@@ -1,7 +1,7 @@
 <template>
   <div class="conatiner">
     <div class="columns">
-           <div class="column">
+      <div class="column is-full-width box">
         <b-field
           id="searchfield"
           aria-label="What are you looking for?"
@@ -16,10 +16,10 @@
             v-model="search"
           />
         </b-field>
-           <div class="column is-half">
+        <div class="column is-half">
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <b-field label="Prefered Calories" label-for="calories"/>
+              <b-field label="Calories" label-for="calories"/>
             </div>
             <div class="field-body">
               <div class="field">
@@ -30,28 +30,29 @@
             </div>
             <div class="field-body">
               <b-field>
-                <button
-                  v-bind:class="{ 'is-primary': isDairyFree }"
-                  class="button is-rounded"
-                  @click="isDairyFree=!isDairyFree,updateFiler()"
-                >
-                  <span>Dairy Free</span>
-                </button>
-
-                <button
-                  v-bind:class="{ 'is-primary': isNutFree }"
-                  class="button is-rounded"
-                  @click="isNutFree=!isNutFree,updateFiler()"
-                >
-                  <span>Nuts Free</span>
-                </button>
+                <div class="control">
+                  <button
+                    v-bind:class="{ 'is-primary': isDairyFree }"
+                    class="button is-rounded"
+                    @click="isDairyFree=!isDairyFree,updateFiler()"
+                  >
+                    <span>Dairy Free</span>
+                  </button>
+                </div>
+                <div class="control">
+                  <button
+                    v-bind:class="{ 'is-primary': isNutFree }"
+                    class="button is-rounded"
+                    @click="isNutFree=!isNutFree,updateFiler()"
+                  >
+                    <span>Nuts Free</span>
+                  </button>
+                </div>
               </b-field>
             </div>
           </div>
+        </div>
       </div>
-      </div>
-   
- 
     </div>
 
     <div class="section">
@@ -71,6 +72,9 @@
 .column {
   display: flex;
 }
+.field-body {
+  padding-left: 10px !important;
+}
 </style>
 
 
@@ -81,7 +85,7 @@ import ItemsView from "@/components/ItemsView";
 export default {
   name: "WhatsOnMenu",
   components: {
-    ItemsView,
+    ItemsView
   },
   data() {
     return {
