@@ -28,7 +28,7 @@
         <div style="padding:5px" class="field">
           <button
             class="button is-primary is-pulled-right"
-            @click="addItem(item,user)"
+            @click="addItem(item)"
           >Add Favourite</button>
         </div>
       </div>
@@ -74,49 +74,30 @@ import axios from "axios";
 
 export default {
   name: "ItemsView",
-  props: ["item", "user"],
+  props: ["item"],
   data() {
     return {
       userEmail: this.$router.history.current.params.email,
-      payload: {
-        userEmail: "",
-        favouriteItem: ""
-      }
     };
   },
   methods: {
-      getAccount(){
-        return this.userEmail
-      },
-
-     addItem(item,user)  {
-       const userEmail = user;
-       console.log("add",userEmail)
-      const url = `http://localhost:5000/user/${userEmail}/favourites`;
-      fetch(url, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, cors, *same-origin
-        //body: JSON.stringify(data), // data can be `string` or {object}!
-        headers: {
-          "Content-Type": "application/json"
+      addItem(item) {
+      const userEmail=this.userEmail;
+      axios({
+        method: "post",
+        url: `http://localhost:5000/user/${userEmail}/favourites`,
+        data: {
+          userEmail: userEmail,
+          favouriteItem: item.itemId,
         }
       })
-        .then(res => res.json())
-        .then(response => {
-          // console.log("Success:", JSON.stringify(response));
-          this.account = response;
-          // console.log(this.account.userPreferences);
+        .then(function(response) {
+          console.log(response);
         })
-        .catch(error => console.error("Error:", error));
+        .catch(function(error) {
+          console.log(error);
+        });
     },
-
-    
   },
-  created() {
- 
-    console.log(this.user)
-    console.log("Created", this.$router);
-    this.getAccount();
-  }
 };
 </script>
