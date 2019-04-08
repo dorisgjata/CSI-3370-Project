@@ -484,6 +484,53 @@ def favourite_meal(userEmail):
     else: 
         print("IDK")    
     return jsonify(response_object)    
+@app.route('/favmeals/', methods=['GET','POST'])
+@cross_origin(origin='*')  
+def max_meals():
+    response_object={'status': 'success'}    
+    if request.method=='GET':
+        conn = db.get_db()
+        sql="select mealname, mealid from meal where mealid = (SELECT MAX(favouritemeal) fROM favouritemeals)"
+        cur=conn.cursor()
+        cur.execute(sql)
+        maxc=cur.fetchall()
+        meal=[]
+        for fav in maxc:
+            fa={
+                "mealname": fav[0],
+                "mealid": fav[1],
+            }
+            meal.append(fa)
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object.update({'favoritemeals': meal})
+        return jsonify(response_object)    
+@app.route('/favitems/', methods=['GET','POST'])
+@cross_origin(origin='*')  
+def max_items():
+    response_object={'status': 'success'}    
+    if request.method=='GET':
+        conn = db.get_db()
+        sql="select itemname, itemid from items where itemid = (SELECT MAX(favouriteitem) fROM favourites)"
+        cur=conn.cursor()
+        cur.execute(sql)
+        maxc=cur.fetchall()
+        meal=[]
+        for fav in maxc:
+            fa={
+                "itemname": fav[0],
+                "itemid": fav[1],
+            }
+            meal.append(fa)
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object.update({'favoriteitems': meal})
+        return jsonify(response_object)    
+
+
+
 #DELETE AND UPDATE FUNCT
 @app.route('/filters/<filterId>', methods=['GET','POST','DELETE'])
 @cross_origin(origin='*')  

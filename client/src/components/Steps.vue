@@ -1,21 +1,62 @@
 <template>
   <div class="steps">
-           <b-tabs position="is-centered" class="block"
-  v-model="activeTab">
-       <b-tab-item label="Add Periods">
+    <b-tabs position="is-centered" class="block" v-model="activeTab">
+      <b-tab-item label="Periods">
         <Periods/>
       </b-tab-item>
-      <b-tab-item label="Add Filters">
+      <b-tab-item label="Filters">
         <Filters/>
       </b-tab-item>
-      <b-tab-item label="Add Items">
+      <b-tab-item label="Items">
         <Items/>
       </b-tab-item>
-      <b-tab-item label="Add Meals">
+      <b-tab-item label="Meals">
         <Meal/>
       </b-tab-item>
+      <b-tab-item label="Stats">
+        <div class="column">
+          <div class="card">
+            <div class="card-content">
+              <div class="title is-4">Max Favourite Meal</div>
+              <b-table :data="favMeals">
+                <template slot-scope="props">
+                  <b-table-column
+                    field="mealid"
+                    label="Meal Id"
+                    width="40"
+                    numeric
+                  >{{ props.row.mealid }}</b-table-column>
+                  <b-table-column
+                    field="mealname"
+                    label="Name"
+                    width="40"
+                    numeric
+                  >{{ props.row.mealname }}</b-table-column>
+                </template>
+              </b-table>
+              <div class="title is-4">Max Favourite Item</div>
+              <b-table :data="favItem">
+                <template slot-scope="props">
+                  <b-table-column
+                    field="itemid"
+                    label="Item Id"
+                    width="40"
+                    numeric
+                  >{{ props.row.itemid }}</b-table-column>
+                  <b-table-column
+                    field="itemname"
+                    label="Name"
+                    width="40"
+                    numeric
+                  >{{ props.row.itemname }}</b-table-column>
+                </template>
+              </b-table>
+            </div>
+          </div>
+        </div>
+      </b-tab-item>
     </b-tabs>
-<!--     <div class="section">
+    <!--     <div class="section">
       <div class="columns is-centered" v-if="itemsData">
         <div v-for="(item, index) in itemsData" :key="index" class="column is-one-third">
           <div class="card">
@@ -53,15 +94,15 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 <style>
-.tabs{
+.tabs {
   background-color: white;
 }
-.tab-content{
-  background-color:  #ddd;
+.tab-content {
+  background-color: #ddd;
 }
 </style>
 
@@ -71,7 +112,6 @@ import Filters from "@/components/Filters";
 import Items from "@/components/Items";
 import Meal from "@/components/Meal";
 import Periods from "@/components/Periods";
-
 
 export default {
   name: "Steps",
@@ -86,6 +126,8 @@ export default {
       filtersData: [],
       itemsData: [],
       activeTab: 0,
+      favMeals:[],
+      favItem:[]
     };
   },
   methods: {
@@ -106,7 +148,30 @@ export default {
         .get(path)
         .then(res => {
           this.itemsData = res.data.items;
-          console.log(this.itemsData);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+        getFavMeal() {
+      const path = "http://localhost:5000/favmeals/";
+      axios
+        .get(path)
+        .then(res => {
+          this.favMeals = res.data.favoritemeals;
+                    console.log(this.favMeals);
+
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+      getFavItem() {
+      const path = "http://localhost:5000/favitems/";
+      axios
+        .get(path)
+        .then(res => {
+          this.favItem = res.data.favoriteitems;
         })
         .catch(error => {
           console.error(error);
@@ -117,6 +182,9 @@ export default {
   created() {
     this.getFilters();
     this.getItems();
+    this.getFavMeal();
+    this.getFavItem();
+
   }
 };
 </script>
