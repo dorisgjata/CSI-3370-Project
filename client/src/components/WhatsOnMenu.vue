@@ -79,7 +79,7 @@ import axios from "axios";
 import ItemsView from "@/components/ItemsView";
 
 export default {
-  name: "Menu",
+  name: "WhatsOnMenu",
   components: {
     ItemsView,
   },

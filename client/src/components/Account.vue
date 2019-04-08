@@ -109,7 +109,7 @@
 import axios from "axios";
 
 export default {
-  name: "SignIn",
+  name: "Account",
   data() {
     return {
       account: null,
