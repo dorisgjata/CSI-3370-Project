@@ -483,7 +483,40 @@ def favourite_meal(userEmail):
         conn.close()
     else: 
         print("IDK")    
-    return jsonify(response_object)    
+    return jsonify(response_object) 
+
+@app.route('/user/<string:userEmail>/favouritemeal/<favouriteMeal>', methods=['GET','POST', 'DELETE'])
+@cross_origin(origin='*')  
+def del_favourite_meal(userEmail,favouriteMeal):  
+    response_object={'status': 'success'}    
+    if request.method=='DELETE':
+        #post_data=request.get_json()
+        conn = db.get_db()
+        sql = 'DELETE FROM favouritemeals WHERE userEmail = (%s) AND favouriteMeal =(%s) '
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,favouriteMeal))
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object['message']="DELETED"
+        return jsonify(response_object) 
+
+@app.route('/user/<string:userEmail>/favourites/<favouriteItem>', methods=['GET','POST', 'DELETE'])
+@cross_origin(origin='*')  
+def del_favourite_item(userEmail,favouriteItem):  
+    response_object={'status': 'success'}    
+    if request.method=='DELETE':
+        #post_data=request.get_json()
+        conn = db.get_db()
+        sql = 'DELETE FROM favourites WHERE userEmail = (%s) AND favouriteItem =(%s) '
+        cur=conn.cursor()
+        cur.execute(sql,(userEmail,favouriteItem))
+        conn.commit()
+        cur.close()
+        conn.close()
+        response_object['message']="DELETED"
+        return jsonify(response_object) 
+
 @app.route('/favmeals/', methods=['GET','POST'])
 @cross_origin(origin='*')  
 def max_meals():

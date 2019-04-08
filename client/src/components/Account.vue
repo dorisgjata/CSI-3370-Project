@@ -65,6 +65,11 @@
                       <div class="media-content">
                         <p class="title is-6">{{fav.itemName}}</p>
                       </div>
+                          <button
+                      type="button"
+                      class="button"
+                      @click=" deleteFavItem(fav.favouriteItem, userEmail) "
+                    >Delete</button>
                     </div>
                   </div>
                 </div>
@@ -96,6 +101,61 @@
                       <div class="media-content">
                         <p class="title is-6">{{fav.mealName}}</p>
                       </div>
+                       <button
+                      type="button"
+                      class="button"
+                      @click=" deleteFavMeal(fav.favouriteMeal, userEmail) "
+                    >Delete</button>
+                    </div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="column">
+            <p class="title is-5">Recommended Meal</p>
+            <div v-if="!favoriteMeals">
+              <div class="card">
+                <div class="card-content">
+                  <div class="media-content">
+                    <p class="subtitle is-6">You have to presave meals to get recommendations</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="favoriteMeals && mealData">
+              <div v-for="(meal, index) in mealData" :key="index">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="media">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <img src="../assets/fav-menu.jpg" alt="food">
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <div class="has-text-left">
+                          <div>
+                            <strong>First Item:</strong>
+                            <p class="subtitle is-6">{{meal.foodItem1}}</p>
+                          </div>
+                          <div>
+                            <strong>Second Item:</strong>
+                            <p class="subtitle is-6">{{meal.foodItem2}}</p>
+                          </div>
+                          <div>
+                            <strong>Third Item:</strong>
+                            <p class="subtitle is-6">{{meal.foodItem3}}</p>
+                          </div>
+                          <div>
+                            <strong>Period:</strong>
+                            <p class="subtitle is-6">{{meal.mealPeriod}}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -103,60 +163,8 @@
             </div>
           </div>
         </div>
-                 <div class="column">
-
-         <div class="column">
-      <p class="title is-5">Recommended Meal</p>
-      <div v-if="!favoriteMeals">
-        <div class="card">
-          <div class="card-content">
-            <div class="media-content">
-              <p class="subtitle is-6">You have to presave meals to get recommendations</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- TODO -->
-      <div v-if="favoriteMeals && mealData">
-        <div v-for="(meal, index) in mealData" :key="index">
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="../assets/fav-menu.jpg" alt="food">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="has-text-left">
-                    <div>
-                      <strong>First Item:</strong>
-                      <p class="subtitle is-6">{{meal.foodItem1}}</p>
-                    </div>
-                    <div>
-                      <strong>Second Item:</strong>
-                      <p class="subtitle is-6">{{meal.foodItem2}}</p>
-                    </div>
-                    <div>
-                      <strong>Third Item:</strong>
-                      <p class="subtitle is-6">{{meal.foodItem3}}</p>
-                    </div>
-                    <div>
-                      <strong>Period:</strong>
-                      <p class="subtitle is-6">{{meal.mealPeriod}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
       </div>
     </div>
-      </div>
-    </div>
-   
   </div>
 </template>
 
@@ -170,7 +178,8 @@ export default {
       account: null,
       favorites: null,
       favoriteMeals: null,
-      mealData: null
+      mealData: null,
+      userEmail: "",
     };
   },
   methods: {
@@ -234,6 +243,24 @@ export default {
         params: { email: this.userEmail }
       });
       console.log("menu done");
+    },
+    deleteFavMeal(favouriteMeal, userEmail) {
+      const path = `http://localhost:5000/user/${userEmail}/favouritemeal/${favouriteMeal}`;
+      axios
+        .delete(path)
+        .then(() => {
+          this.getMealFavorites();
+        })
+        .catch(error => {});
+    },
+    deleteFavItem(favouriteItem, userEmail) {
+      const path = `http://localhost:5000/user/${userEmail}/favourites/${favouriteItem}`;
+      axios
+        .delete(path)
+        .then(() => {
+          this.getUserFavorites();
+        })
+        .catch(error => {});
     }
   },
   created() {
