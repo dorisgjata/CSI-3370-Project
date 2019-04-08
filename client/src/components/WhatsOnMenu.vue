@@ -24,7 +24,13 @@
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <b-input id="calories" type="text" required placeholder="Select Calories"></b-input>
+                  <b-input
+                  v-model="calorie"
+                    id="calories"
+                    type="text"
+                    required
+                    placeholder="Select Calories"
+                  ></b-input>
                 </div>
               </div>
             </div>
@@ -95,7 +101,8 @@ export default {
       filtersData: [],
       itemsData: [],
       initialData: [],
-      search: ""
+      search: "",
+      calorie: ""
     };
   },
   methods: {
@@ -134,8 +141,21 @@ export default {
       console.log(this.itemsData);
     },
     searchitems: function() {
+      const array=[]
       return this.itemsData.filter(item => {
+        if(this.search){
         return item.itemName.toLowerCase().includes(this.search.toLowerCase());
+        }else if(this.calorie){
+          return item.itemCalories<=this.calorie;
+        }
+        else
+         return this.itemsData;
+      });
+    },
+    searchcalorie: function() {
+      return this.itemsData.filter(item => {
+        const cal= item.itemCalorie.includes(this.calorie);
+        console.log(cal)
       });
     }
   },
